@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberGuard :: Cybersecurity Awareness Mission</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-0:#03050a;
+  --bg-1:#070d18;
+  --bg-2:#0b1422;
+  --panel:rgba(13,23,40,0.62);
+  --panel-soft:rgba(13,23,40,0.4);
+  --panel-border:rgba(94,196,255,0.16);
+  --panel-border-hi:rgba(94,196,255,0.4);
+  --cyan:#49e6ff;
+  --cyan-dim:#2a8fa8;
+  --blue:#5c8dff;
+  --indigo:#3349d6;
+  --danger:#ff4d6a;
+  --danger-dim:#7a2436;
+  --success:#37f2ad;
+  --amber:#ffb547;
+  --text-hi:#eaf4ff;
+  --text-mid:#9fb3d4;
+  --text-low:#5c7196;
+  --mono:'IBM Plex Mono', 'Courier New', monospace;
+  --display:'Rajdhani', sans-serif;
+  --body:'Inter', -apple-system, sans-serif;
+  --r-sm:6px;
+  --r-md:12px;
+  --r-lg:20px;
+  --ease:cubic-bezier(.22,.9,.32,1);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg-0);color:var(--text-hi);font-family:var(--body);overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased;}
+::selection{background:rgba(73,230,255,0.25);}
+button{font-family:inherit;cursor:pointer;}
+ul{margin:0;padding:0;}
+h1,h2,h3,h4,p{margin:0;}
+a{color:var(--cyan);}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(94,196,255,0.25);border-radius:8px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(94,196,255,0.45);}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px;}
+
+#particles{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(53,90,160,0.18), transparent 60%),radial-gradient(ellipse 60% 50% at 100% 100%, rgba(40,160,170,0.12), transparent 60%),linear-gradient(180deg,var(--bg-0),var(--bg-1) 40%,var(--bg-0));}
+#particles canvas{position:absolute;inset:0;display:block;}
+.grid-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(94,196,255,0.035) 1px, transparent 1px),linear-gradient(90deg, rgba(94,196,255,0.035) 1px, transparent 1px);background-size:42px 42px;mask-image:radial-gradient(ellipse 70% 70% at 50% 40%, black 0%, transparent 75%);opacity:0.7;}
+.scanline{position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 2px, transparent 3px);mix-blend-mode:overlay;}
+.app-layer{position:relative;z-index:3;}
+
+.hack-ripple{position:fixed;z-index:9999;pointer-events:none;width:10px;height:10px;border-radius:50%;border:1px solid rgba(73,230,255,0.8);transform:translate(-50%,-50%);animation:hack-ripple-grow .6s var(--ease) forwards;}
+@keyframes hack-ripple-grow{0%{width:6px;height:6px;opacity:1;border-width:2px;box-shadow:0 0 8px rgba(73,230,255,0.8);}100%{width:64px;height:64px;opacity:0;border-width:1px;box-shadow:0 0 0 rgba(73,230,255,0);}}
+.hack-glyphs{position:fixed;z-index:9999;pointer-events:none;font-family:var(--mono);font-size:.66rem;color:var(--cyan);text-shadow:0 0 6px rgba(73,230,255,0.8);transform:translate(-50%,-50%);animation:hack-glyph-rise .7s ease-out forwards;white-space:nowrap;}
+@keyframes hack-glyph-rise{0%{opacity:0;transform:translate(-50%,-50%) translateY(0);}15%{opacity:1;}100%{opacity:0;transform:translate(-50%,-50%) translateY(-30px);}}
+
+#loading-screen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:var(--bg-0);transition:opacity .7s var(--ease), visibility .7s;}
+#loading-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.loader-box{width:min(520px,86vw);font-family:var(--mono);}
+.loader-top{display:flex;justify-content:space-between;align-items:baseline;font-size:.72rem;letter-spacing:.12em;color:var(--text-low);margin-bottom:10px;text-transform:uppercase;}
+.loader-top span:last-child{color:var(--cyan);}
+.loader-frame{border:1px solid var(--panel-border);border-radius:var(--r-md);background:var(--panel-soft);padding:22px;backdrop-filter:blur(10px);}
+.loader-title{font-family:var(--display);font-weight:700;font-size:1.5rem;letter-spacing:.06em;color:var(--text-hi);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.loader-title .dot{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:pulse-dot 1.2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.3;}}
+#boot-lines{min-height:140px;font-size:.82rem;line-height:1.65;color:var(--text-mid);}
+#boot-lines .line{opacity:0;animation:fadein .35s forwards;}
+#boot-lines .ok{color:var(--success);}
+@keyframes fadein{to{opacity:1;}}
+.loader-bar-track{margin-top:16px;height:6px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden;}
+.loader-bar-fill{height:100%;width:0%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .25s var(--ease);box-shadow:0 0 12px rgba(73,230,255,0.5);}
+.loader-pct{margin-top:8px;font-size:.72rem;color:var(--text-low);text-align:right;}
+
+#alert-screen{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .6s var(--ease), visibility .6s;}
+#alert-screen.visible{opacity:1;visibility:visible;}
+#alert-screen.exiting{opacity:0;transform:scale(1.04);transition:opacity .5s var(--ease), transform .5s var(--ease);}
+.alert-card{width:min(640px,92vw);border:1px solid rgba(255,77,106,0.35);border-radius:var(--r-lg);background:linear-gradient(160deg, rgba(30,10,16,0.7), rgba(13,18,30,0.75));backdrop-filter:blur(14px);padding:42px 38px;text-align:center;box-shadow:0 0 0 1px rgba(255,77,106,0.08), 0 40px 80px -20px rgba(0,0,0,0.7);animation:card-rise .8s var(--ease) both;}
+@keyframes card-rise{from{opacity:0;transform:translateY(26px) scale(.97);}to{opacity:1;transform:none;}}
+.alert-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;color:var(--danger);text-transform:uppercase;border:1px solid rgba(255,77,106,0.4);border-radius:30px;padding:6px 16px;background:rgba(255,77,106,0.08);margin-bottom:22px;}
+.alert-badge .ping{width:7px;height:7px;border-radius:50%;background:var(--danger);box-shadow:0 0 8px var(--danger);animation:pulse-dot .9s ease-in-out infinite;}
+.alert-title{font-family:var(--display);font-weight:700;font-size:clamp(1.8rem,5vw,2.6rem);letter-spacing:.03em;color:#ffe2e7;text-shadow:0 0 24px rgba(255,77,106,0.35);margin-bottom:18px;}
+.alert-body{color:var(--text-mid);font-size:1rem;line-height:1.7;margin-bottom:22px;}
+.alert-mission{border:1px solid var(--panel-border);border-radius:var(--r-md);background:var(--panel-soft);padding:18px 20px;text-align:left;font-family:var(--mono);font-size:.85rem;line-height:1.8;color:var(--text-hi);margin-bottom:28px;}
+.alert-mission b{color:var(--cyan);font-weight:600;letter-spacing:.04em;}
+.btn-primary{position:relative;border:none;border-radius:50px;padding:16px 38px;font-family:var(--display);font-weight:700;font-size:1.02rem;letter-spacing:.08em;text-transform:uppercase;color:#04101a;background:linear-gradient(120deg,var(--cyan),var(--blue));box-shadow:0 0 0 1px rgba(73,230,255,0.4), 0 18px 40px -12px rgba(73,230,255,0.45);transition:transform .25s var(--ease), box-shadow .25s var(--ease);overflow:hidden;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(73,230,255,0.6),0 22px 48px -10px rgba(73,230,255,0.6);}
+.btn-primary:active{transform:translateY(0px) scale(.98);}
+.btn-primary .shine{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.55),transparent);transform:skewX(-20deg);animation:shine-sweep 3.2s ease-in-out infinite;}
+@keyframes shine-sweep{0%{left:-60%;}40%{left:130%;}100%{left:130%;}}
+.alert-hint{margin-top:18px;font-size:.72rem;color:var(--text-low);font-family:var(--mono);letter-spacing:.04em;}
+
+#app{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;opacity:0;transition:opacity .7s var(--ease);}
+#app.visible{display:flex;opacity:1;}
+.status-bar{display:flex;align-items:center;gap:18px;padding:14px 22px;border-bottom:1px solid var(--panel-border);background:rgba(6,11,20,0.55);backdrop-filter:blur(12px);flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;}
+.brand-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--indigo));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:.9rem;color:#031019;box-shadow:0 0 16px rgba(73,230,255,0.45);}
+.brand-text{font-family:var(--display);font-weight:700;letter-spacing:.05em;font-size:1.05rem;}
+.brand-text span{color:var(--cyan);}
+.status-chip{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;color:var(--text-mid);display:flex;align-items:center;gap:7px;padding:6px 12px;border:1px solid var(--panel-border);border-radius:30px;background:var(--panel-soft);text-transform:uppercase;white-space:nowrap;}
+.status-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 6px var(--success);}
+.status-chip.threat .dot{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+#clock{font-family:var(--mono);}
+.progress-wrap{display:flex;align-items:center;gap:10px;min-width:150px;}
+.progress-track{flex:1;height:6px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden;}
+.progress-fill{height:100%;width:0%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .5s var(--ease);}
+.progress-label{font-family:var(--mono);font-size:.7rem;color:var(--cyan);min-width:34px;text-align:right;}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--panel-border);background:var(--panel-soft);display:flex;align-items:center;justify-content:center;color:var(--text-mid);transition:all .2s var(--ease);font-size:1rem;}
+.icon-btn:hover{color:var(--cyan);border-color:var(--panel-border-hi);transform:translateY(-1px);}
+
+.main-grid{flex:1;display:grid;grid-template-columns:1fr 300px;gap:0;min-height:0;position:relative;}
+.map-wrap{position:relative;display:flex;align-items:center;justify-content:center;padding:20px;min-height:0;overflow:hidden;}
+#map-stage{position:relative;width:min(78vh,720px);height:min(78vh,720px);max-width:100%;}
+#connections{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+.conn-line{stroke:rgba(94,196,255,0.22);stroke-width:1.4;fill:none;stroke-dasharray:5 7;animation:dash-flow 3.5s linear infinite;transition:stroke .4s, stroke-width .4s;}
+.conn-line.done{stroke:rgba(55,242,173,0.45);}
+@keyframes dash-flow{to{stroke-dashoffset:-120;}}
+.radar-sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg, rgba(73,230,255,0.16), transparent 28%);animation:sweep-rotate 7s linear infinite;pointer-events:none;mix-blend-mode:screen;}
+@keyframes sweep-rotate{to{transform:rotate(360deg);}}
+.radar-rings{position:absolute;inset:0;pointer-events:none;}
+.radar-ring{position:absolute;border:1px solid rgba(94,196,255,0.1);border-radius:50%;}
+.center-node{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:152px;height:152px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 35% 30%, rgba(73,230,255,0.22), rgba(10,18,32,0.9));border:1px solid var(--panel-border-hi);box-shadow:0 0 50px rgba(73,230,255,0.25), inset 0 0 30px rgba(73,230,255,0.08);z-index:5;padding:14px;animation:center-pulse 3.4s ease-in-out infinite;}
+@keyframes center-pulse{0%,100%{box-shadow:0 0 40px rgba(73,230,255,0.2), inset 0 0 30px rgba(73,230,255,0.08);}50%{box-shadow:0 0 64px rgba(73,230,255,0.4), inset 0 0 36px rgba(73,230,255,0.14);}}
+.center-node .ct{font-family:var(--display);font-weight:700;font-size:.92rem;letter-spacing:.04em;line-height:1.25;color:var(--text-hi);}
+.center-node .cs{font-family:var(--mono);font-size:.6rem;color:var(--cyan);letter-spacing:.12em;margin-top:6px;display:block;}
+.node-btn{position:absolute;transform:translate(-50%,-50%);width:108px;height:108px;border-radius:50%;border:1px solid var(--panel-border);background:var(--panel);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:8px;color:var(--text-mid);transition:transform .3s var(--ease), border-color .3s, background .3s, box-shadow .3s;z-index:6;}
+.node-btn .n-icon{font-size:1.5rem;line-height:1;}
+.node-btn .n-label{font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.02em;color:var(--text-hi);line-height:1.2;}
+.node-btn .n-num{position:absolute;top:6px;left:10px;font-family:var(--mono);font-size:.6rem;color:var(--text-low);}
+.node-btn:hover, .node-btn:focus-visible{transform:translate(-50%,-50%) scale(1.08);border-color:var(--panel-border-hi);box-shadow:0 0 30px rgba(73,230,255,0.25);}
+.node-btn.done{border-color:rgba(55,242,173,0.45);background:linear-gradient(160deg, rgba(55,242,173,0.12), var(--panel));}
+.node-btn.done .n-icon{filter:drop-shadow(0 0 6px rgba(55,242,173,0.6));}
+.node-btn.done::after{content:'✓';position:absolute;bottom:8px;right:10px;font-size:.65rem;color:var(--success);font-family:var(--mono);}
+.node-btn.final{border-color:rgba(255,181,71,0.4);}
+.node-btn.final .n-icon{filter:drop-shadow(0 0 6px rgba(255,181,71,0.5));}
+.node-btn.sim{border-color:rgba(255,77,106,0.3);}
+.node-btn.sim .n-icon{filter:drop-shadow(0 0 6px rgba(255,77,106,0.45));}
+
+.tracker-panel{border-left:1px solid var(--panel-border);background:rgba(6,11,20,0.45);backdrop-filter:blur(10px);padding:20px 18px;overflow-y:auto;}
+.tracker-h{font-family:var(--display);font-weight:700;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-low);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.tracker-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.tracker-item{display:flex;align-items:center;gap:10px;font-size:.8rem;color:var(--text-mid);padding:8px 10px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:all .2s;}
+.tracker-item:hover{background:rgba(255,255,255,0.03);}
+.tracker-item .chk{width:16px;height:16px;border-radius:4px;border:1px solid var(--panel-border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;}
+.tracker-item.done{color:var(--text-hi);}
+.tracker-item.done .chk{background:var(--success);border-color:var(--success);color:#04231a;}
+.tracker-item.active{border-color:var(--panel-border-hi);background:rgba(73,230,255,0.06);}
+.badges-grid{display:flex;flex-wrap:wrap;gap:10px;}
+.badge{width:54px;height:54px;border-radius:12px;border:1px solid var(--panel-border);background:var(--panel-soft);display:flex;align-items:center;justify-content:center;font-size:1.3rem;filter:grayscale(1) opacity(.3);transition:all .4s var(--ease);position:relative;}
+.badge.unlocked{filter:none;border-color:rgba(255,181,71,0.4);box-shadow:0 0 16px rgba(255,181,71,0.25);animation:badge-pop .5s var(--ease);}
+@keyframes badge-pop{0%{transform:scale(.5) rotate(-12deg);}60%{transform:scale(1.15) rotate(4deg);}100%{transform:scale(1) rotate(0);}}
+
+.mobile-track{display:none;width:100%;max-width:100%;box-sizing:border-box;padding:18px 16px 100px;overflow-y:auto;overflow-x:hidden;}
+.mt-line{position:relative;width:100%;padding-left:34px;box-sizing:border-box;}
+.mt-line::before{content:'';position:absolute;left:11px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--cyan),rgba(94,196,255,0.05));}
+.mt-item{position:relative;width:100%;box-sizing:border-box;margin-bottom:14px;border:1px solid var(--panel-border);border-radius:var(--r-md);background:var(--panel);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s, transform .2s;}
+.mt-item:hover{border-color:var(--panel-border-hi);transform:translateX(2px);}
+.mt-item::before{content:'';position:absolute;left:-28px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:var(--bg-1);border:2px solid var(--panel-border-hi);flex-shrink:0;z-index:1;}
+.mt-item.done::before{background:var(--success);border-color:var(--success);}
+.mt-icon{font-size:1.4rem;flex-shrink:0;line-height:1;}
+.mt-text{flex:1;min-width:0;}
+.mt-text b{font-family:var(--display);font-size:.92rem;display:block;color:var(--text-hi);}
+.mt-text span{font-size:.74rem;color:var(--text-low);}
+
+#panel-overlay{position:fixed;inset:0;z-index:50;background:rgba(2,5,10,0.55);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:opacity .35s var(--ease),visibility .35s;}
+#panel-overlay.visible{opacity:1;visibility:visible;}
+#detail-panel{position:fixed;top:0;right:0;height:100%;z-index:51;width:min(560px,100vw);background:linear-gradient(165deg, rgba(9,15,27,0.96), rgba(6,10,18,0.98));border-left:1px solid var(--panel-border-hi);box-shadow:-30px 0 60px -20px rgba(0,0,0,0.6);transform:translateX(100%);transition:transform .45s var(--ease);display:flex;flex-direction:column;}
+#detail-panel.visible{transform:translateX(0);}
+.panel-head{display:flex;align-items:flex-start;gap:14px;padding:24px 26px 18px;border-bottom:1px solid var(--panel-border);}
+.panel-head .ph-icon{width:46px;height:46px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--panel-soft);border:1px solid var(--panel-border);}
+.panel-head .ph-text{flex:1;}
+.panel-eyebrow{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase;margin-bottom:4px;}
+.panel-title{font-family:var(--display);font-weight:700;font-size:1.3rem;letter-spacing:.02em;}
+.panel-close{width:34px;height:34px;border-radius:50%;border:1px solid var(--panel-border);background:var(--panel-soft);color:var(--text-mid);font-size:1.1rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.panel-close:hover{color:var(--danger);border-color:rgba(255,77,106,0.4);}
+.panel-body{flex:1;overflow-y:auto;padding:24px 26px 40px;font-size:.92rem;line-height:1.65;color:var(--text-mid);}
+.panel-body h4{font-family:var(--display);color:var(--text-hi);font-size:1rem;font-weight:700;margin:22px 0 10px;letter-spacing:.02em;}
+.panel-body h4:first-child{margin-top:0;}
+.panel-body p{margin-bottom:12px;}
+.panel-body ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.panel-body ul li{display:flex;gap:10px;align-items:flex-start;}
+.panel-body ul li::before{content:'▸';color:var(--cyan);flex-shrink:0;margin-top:1px;}
+
+.callout{border:1px solid var(--panel-border);border-radius:var(--r-md);background:var(--panel-soft);padding:14px 16px;margin:16px 0;font-size:.85rem;}
+.callout.fact{border-color:rgba(255,181,71,0.3);}
+.callout.fact b{color:var(--amber);}
+.callout.critical{border-color:rgba(255,77,106,0.35);background:rgba(255,77,106,0.06);}
+.callout.critical b{color:var(--danger);}
+.callout.success{border-color:rgba(55,242,173,0.3);background:rgba(55,242,173,0.05);}
+.callout.success b{color:var(--success);}
+.code-box{font-family:var(--mono);font-size:.8rem;background:#03060c;border:1px solid var(--panel-border);border-radius:var(--r-sm);padding:12px 14px;margin:10px 0;color:var(--cyan);white-space:pre-wrap;}
+.code-box.bad{color:var(--danger);}
+
+.threat-grid{display:flex;flex-direction:column;gap:12px;margin-top:8px;}
+.threat-card{border:1px solid var(--panel-border);border-radius:var(--r-md);background:var(--panel-soft);padding:16px;transition:border-color .25s, transform .25s, box-shadow .25s;cursor:pointer;}
+.threat-card:hover{border-color:var(--panel-border-hi);transform:translateX(3px);box-shadow:0 0 24px rgba(73,230,255,0.1);}
+.threat-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.threat-head .t-icon{font-size:1.3rem;}
+.threat-head .t-name{font-family:var(--display);font-weight:700;color:var(--text-hi);font-size:.98rem;}
+.threat-toggle-hint{font-family:var(--mono);font-size:.62rem;color:var(--text-low);letter-spacing:.06em;margin-left:auto;text-transform:uppercase;}
+.threat-extra{max-height:0;overflow:hidden;transition:max-height .35s var(--ease), margin-top .35s var(--ease);}
+.threat-card.open .threat-extra{max-height:400px;margin-top:10px;}
+.threat-card.open .threat-toggle-hint::after{content:' ▴';}
+.threat-toggle-hint::after{content:' ▾';}
+
+.flow-steps{display:flex;flex-direction:column;}
+.flow-step{position:relative;padding:14px 0 14px 46px;}
+.flow-step::before{content:'';position:absolute;left:13px;top:42px;bottom:-6px;width:2px;background:linear-gradient(180deg,var(--cyan),rgba(94,196,255,0.05));}
+.flow-step:last-child::before{display:none;}
+.flow-step .fs-num{position:absolute;left:0;top:12px;width:28px;height:28px;border-radius:50%;background:var(--panel-soft);border:1px solid var(--panel-border-hi);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.78rem;color:var(--cyan);cursor:pointer;transition:.2s;}
+.flow-step .fs-num:hover{background:rgba(73,230,255,0.15);transform:scale(1.1);}
+.flow-step .fs-num.checked{background:var(--success);border-color:var(--success);color:#04231a;}
+.flow-step .fs-title{font-family:var(--display);font-weight:700;color:var(--text-hi);font-size:.95rem;margin-bottom:3px;}
+.flow-step .fs-desc{font-size:.84rem;}
+.fs-title-row{display:flex;align-items:center;gap:8px;}
+
+.challenge-box{border:1px solid var(--panel-border-hi);border-radius:var(--r-md);background:var(--panel-soft);padding:18px;margin-top:14px;}
+.challenge-q{font-family:var(--display);font-weight:600;color:var(--text-hi);margin-bottom:14px;font-size:.98rem;}
+.choice-list{display:flex;flex-direction:column;gap:9px;}
+.choice-btn{text-align:left;border:1px solid var(--panel-border);border-radius:var(--r-sm);background:rgba(255,255,255,0.02);color:var(--text-mid);padding:11px 14px;font-size:.86rem;transition:.2s;font-family:var(--body);}
+.choice-btn:hover:not(:disabled){border-color:var(--panel-border-hi);background:rgba(94,196,255,0.06);}
+.choice-btn:disabled{cursor:default;}
+.choice-btn.correct{border-color:var(--success);background:rgba(55,242,173,0.1);color:var(--text-hi);}
+.choice-btn.wrong{border-color:var(--danger);background:rgba(255,77,106,0.08);color:var(--text-hi);}
+.choice-feedback{margin-top:12px;font-size:.85rem;padding:10px 12px;border-radius:var(--r-sm);display:none;}
+.choice-feedback.show{display:block;}
+.choice-feedback.good{background:rgba(55,242,173,0.1);color:var(--success);border:1px solid rgba(55,242,173,0.3);}
+.choice-feedback.bad{background:rgba(255,77,106,0.08);color:#ff9aac;border:1px solid rgba(255,77,106,0.25);}
+.quiz-progress{font-family:var(--mono);font-size:.7rem;color:var(--text-low);margin-bottom:10px;letter-spacing:.06em;}
+.quiz-score-screen{text-align:center;padding:18px 4px;}
+.quiz-score-num{font-family:var(--display);font-weight:700;font-size:2.6rem;color:var(--cyan);}
+.quiz-score-label{font-family:var(--mono);font-size:.74rem;color:var(--text-low);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+
+.prevent-grid{display:flex;flex-direction:column;gap:12px;}
+.prevent-card{border:1px solid var(--panel-border);border-radius:var(--r-md);padding:15px 16px;background:var(--panel-soft);transition:.2s;}
+.prevent-card .pc-title{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:700;color:var(--text-hi);margin-bottom:6px;font-size:.95rem;}
+.pc-check{margin-left:auto;width:20px;height:20px;border-radius:5px;border:1px solid var(--panel-border);display:flex;align-items:center;justify-content:center;font-size:.65rem;cursor:pointer;flex-shrink:0;color:transparent;transition:.2s;}
+.pc-check:hover{border-color:var(--panel-border-hi);}
+.pc-check.on{background:var(--success);border-color:var(--success);color:#04231a;}
+.prevent-card.on{border-color:rgba(55,242,173,0.4);}
+.pw-tester{margin-top:10px;}
+.pw-tester input{width:100%;font-family:var(--mono);font-size:.85rem;background:#03060c;border:1px solid var(--panel-border);border-radius:var(--r-sm);color:var(--text-hi);padding:9px 12px;outline:none;}
+.pw-tester input:focus{border-color:var(--panel-border-hi);}
+.pw-meter-track{height:6px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden;margin-top:8px;}
+.pw-meter-fill{height:100%;width:0%;border-radius:4px;background:var(--danger);transition:width .3s var(--ease), background .3s;}
+.pw-meter-label{font-family:var(--mono);font-size:.68rem;color:var(--text-low);margin-top:6px;letter-spacing:.04em;}
+
+.timeline{display:flex;flex-direction:column;}
+.tl-item{position:relative;padding:0 0 22px 28px;}
+.tl-item::before{content:'';position:absolute;left:5px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);}
+.tl-item::after{content:'';position:absolute;left:9px;top:16px;bottom:0;width:1px;background:rgba(94,196,255,0.2);}
+.tl-item:last-child::after{display:none;}
+.tl-item .tl-k{font-family:var(--mono);font-size:.66rem;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.tl-item .tl-v{font-size:.88rem;}
+
+.complete-hero{text-align:center;padding:10px 0 22px;}
+.complete-hero .ch-icon{font-size:3rem;margin-bottom:10px;}
+.complete-hero .ch-title{font-family:var(--display);font-weight:700;font-size:1.6rem;color:var(--success);letter-spacing:.04em;}
+.takeaway-list{display:flex;flex-direction:column;gap:10px;margin:16px 0;}
+.takeaway-list li{display:flex;gap:10px;align-items:flex-start;font-size:.9rem;}
+.takeaway-list li::before{content:'✔';color:var(--success);}
+.final-msg{font-style:normal;border-left:2px solid var(--cyan);padding-left:16px;margin:18px 0;color:var(--text-hi);font-size:.92rem;line-height:1.8;}
+.final-msg .fm-line{display:block;font-family:var(--mono);font-size:.82rem;color:var(--cyan);margin-top:4px;}
+
+.sim-stage{border:1px solid var(--panel-border);border-radius:var(--r-md);background:linear-gradient(160deg, rgba(8,14,26,0.7), rgba(6,10,18,0.85));padding:18px;margin-top:10px;}
+.sim-step-label{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;color:var(--cyan);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.sim-step-label .pip{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan);}
+.fake-form{display:flex;flex-direction:column;gap:10px;}
+.fake-form label{font-family:var(--mono);font-size:.7rem;color:var(--text-low);letter-spacing:.04em;text-transform:uppercase;}
+.fake-form input{width:100%;font-family:var(--mono);font-size:.88rem;background:#03060c;border:1px solid var(--panel-border);border-radius:var(--r-sm);color:var(--text-hi);padding:10px 12px;outline:none;transition:border-color .2s;}
+.fake-form input:focus{border-color:var(--panel-border-hi);}
+.sim-strength-row{display:flex;align-items:center;gap:8px;margin-top:-2px;}
+.sim-strength-track{flex:1;height:5px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden;}
+.sim-strength-fill{height:100%;width:0%;border-radius:4px;background:var(--danger);transition:width .25s,background .25s;}
+.sim-strength-text{font-family:var(--mono);font-size:.62rem;color:var(--text-low);min-width:64px;text-align:right;}
+.btn-sim{border:1px solid var(--panel-border-hi);border-radius:var(--r-sm);background:rgba(73,230,255,0.08);color:var(--cyan);font-family:var(--display);font-weight:700;letter-spacing:.04em;font-size:.85rem;padding:10px 16px;text-transform:uppercase;transition:.2s;text-align:center;}
+.btn-sim:hover:not(:disabled){background:rgba(73,230,255,0.16);box-shadow:0 0 18px rgba(73,230,255,0.18);}
+.btn-sim:disabled{opacity:.35;cursor:not-allowed;}
+.btn-sim.danger{border-color:rgba(255,77,106,0.45);background:rgba(255,77,106,0.08);color:#ff9aac;}
+.btn-sim.danger:hover:not(:disabled){background:rgba(255,77,106,0.16);box-shadow:0 0 18px rgba(255,77,106,0.2);}
+.btn-sim.ghost{border-color:var(--panel-border);background:transparent;color:var(--text-mid);}
+.sim-account-card{border:1px solid rgba(55,242,173,0.35);border-radius:var(--r-sm);background:rgba(55,242,173,0.06);padding:12px 14px;margin-top:10px;font-family:var(--mono);font-size:.78rem;color:var(--text-hi);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+.sim-account-card span.lbl{color:var(--text-low);}
+
+.term-window{border-radius:var(--r-md);overflow:hidden;border:1px solid rgba(73,230,255,0.3);background:#020407;box-shadow:0 0 0 1px rgba(73,230,255,0.06), 0 20px 50px -15px rgba(0,0,0,0.8);margin-top:14px;}
+.term-titlebar{display:flex;align-items:center;gap:8px;padding:9px 12px;background:linear-gradient(180deg, rgba(20,30,45,0.9), rgba(10,16,26,0.9));border-bottom:1px solid rgba(73,230,255,0.15);}
+.term-dot{width:10px;height:10px;border-radius:50%;}
+.term-dot.r{background:#ff5f56;}
+.term-dot.y{background:#ffbd2e;}
+.term-dot.g{background:#27c93f;}
+.term-titletext{font-family:var(--mono);font-size:.7rem;color:var(--text-low);margin-left:8px;letter-spacing:.04em;}
+.term-body{font-family:var(--mono);font-size:.8rem;line-height:1.65;padding:14px 16px;min-height:160px;max-height:340px;overflow-y:auto;color:#8df0ff;background:repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 2px, transparent 3px);}
+.term-line{opacity:0;animation:term-fade .15s forwards;white-space:pre-wrap;word-break:break-all;}
+@keyframes term-fade{to{opacity:1;}}
+.term-line.prompt{color:var(--success);}
+.term-line.dim{color:var(--text-low);}
+.term-line.warn{color:var(--amber);}
+.term-line.bad{color:var(--danger);}
+.term-line.good{color:var(--success);}
+.term-line.hl{color:var(--cyan);}
+.term-cursor{display:inline-block;width:7px;height:14px;background:var(--cyan);margin-left:2px;vertical-align:middle;animation:term-blink 1s step-end infinite;}
+@keyframes term-blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
+.term-input-row{display:flex;align-items:center;gap:6px;padding:0 16px 14px;font-family:var(--mono);font-size:.85rem;}
+.term-input-row.hidden{display:none;}
+.term-input-row span.tag{color:var(--success);flex-shrink:0;}
+.term-input-row input{flex:1;background:transparent;border:none;outline:none;color:var(--text-hi);font-family:var(--mono);font-size:.85rem;}
+.term-input-row .term-go{background:rgba(73,230,255,0.12);border:1px solid rgba(73,230,255,0.35);color:var(--cyan);border-radius:5px;padding:5px 12px;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;flex-shrink:0;}
+.term-input-row .term-go:hover{background:rgba(73,230,255,0.2);}
+.sim-result-banner{margin-top:12px;border-radius:var(--r-sm);padding:12px 14px;font-family:var(--mono);font-size:.82rem;display:none;}
+.sim-result-banner.show{display:block;}
+.sim-result-banner.cracked{background:rgba(255,77,106,0.1);border:1px solid rgba(255,77,106,0.35);color:#ff9aac;}
+.sim-result-banner.safe{background:rgba(55,242,173,0.1);border:1px solid rgba(55,242,173,0.35);color:var(--success);}
+.sim-explain{border-left:2px solid var(--cyan);padding:4px 0 4px 14px;margin-top:12px;font-size:.85rem;color:var(--text-mid);}
+.sim-explain b{color:var(--text-hi);}
+
+.dl-card{border:1px solid var(--panel-border);border-radius:var(--r-md);background:linear-gradient(150deg, rgba(20,16,10,0.55), rgba(10,8,14,0.7));padding:16px;display:flex;gap:14px;align-items:center;}
+.dl-thumb{width:54px;height:54px;border-radius:10px;flex-shrink:0;background:linear-gradient(145deg,#3a2a10,#1a1208);display:flex;align-items:center;justify-content:center;font-size:1.5rem;border:1px solid rgba(255,181,71,0.3);}
+.dl-meta{flex:1;}
+.dl-meta .dl-name{font-family:var(--display);font-weight:700;color:var(--text-hi);font-size:.92rem;}
+.dl-meta .dl-sub{font-family:var(--mono);font-size:.66rem;color:var(--amber);letter-spacing:.04em;margin-top:2px;}
+.dl-progress-track{height:6px;border-radius:4px;background:rgba(255,255,255,0.07);overflow:hidden;margin-top:10px;}
+.dl-progress-fill{height:100%;width:0%;border-radius:4px;background:linear-gradient(90deg,var(--amber),var(--danger));transition:width .15s linear;}
+.dl-status{font-family:var(--mono);font-size:.68rem;color:var(--text-low);margin-top:6px;}
+
+#hack-takeover{position:fixed;inset:0;z-index:9000;background:rgba(2,3,6,0.92);display:none;align-items:center;justify-content:center;padding:20px;}
+#hack-takeover.show{display:flex;}
+.hack-flash{position:fixed;inset:0;background:rgba(255,77,106,0.18);pointer-events:none;opacity:0;z-index:9001;}
+.hack-flash.flash{animation:hack-flash-anim .35s ease-out;}
+@keyframes hack-flash-anim{0%{opacity:1;}100%{opacity:0;}}
+.hack-popup{width:min(420px,90vw);border:1px solid rgba(255,77,106,0.5);border-radius:var(--r-md);background:linear-gradient(160deg, rgba(35,8,14,0.95), rgba(10,5,10,0.97));padding:26px 24px;text-align:center;box-shadow:0 0 60px rgba(255,77,106,0.25);animation:hack-popup-shake .4s var(--ease);}
+@keyframes hack-popup-shake{0%{transform:scale(.9) translateX(0);opacity:0;}30%{transform:scale(1.02) translateX(-6px);opacity:1;}50%{transform:translateX(5px);}70%{transform:translateX(-3px);}100%{transform:translateX(0);}}
+.hack-popup .hp-icon{font-size:2.4rem;}
+.hack-popup .hp-title{font-family:var(--display);font-weight:700;font-size:1.3rem;color:#ffd2da;margin:8px 0 6px;letter-spacing:.03em;}
+.hack-popup .hp-sub{font-size:.84rem;color:var(--text-mid);margin-bottom:18px;}
+.hack-popup .btn-sim{width:100%;}
+#hack-term-wrap{position:fixed;inset:0;z-index:9002;display:none;align-items:center;justify-content:center;padding:18px;}
+#hack-term-wrap.show{display:flex;}
+#hack-term-wrap .term-window{width:min(620px,94vw);}
+#hack-term-wrap .term-body{min-height:280px;max-height:50vh;}
+.hack-term-hint{text-align:center;font-family:var(--mono);font-size:.68rem;color:var(--text-low);margin-top:10px;letter-spacing:.05em;}
+.hack-term-hint kbd{border:1px solid var(--panel-border);border-radius:4px;padding:1px 6px;color:var(--cyan);background:rgba(73,230,255,0.06);}
+@keyframes vibrate-screen{0%{transform:translate(0,0);}10%{transform:translate(-1px,1px);}20%{transform:translate(1px,-1px);}30%{transform:translate(-2px,0px);}40%{transform:translate(2px,1px);}50%{transform:translate(-1px,-1px);}60%{transform:translate(1px,2px);}70%{transform:translate(-2px,-1px);}80%{transform:translate(2px,0px);}90%{transform:translate(-1px,1px);}100%{transform:translate(0,0);}}
+body.glitching #app{animation:vibrate-screen .25s linear infinite;}
+.fake-cursor{position:fixed;z-index:9050;width:22px;height:22px;pointer-events:none;display:none;}
+.fake-cursor.show{display:block;}
+.fake-cursor svg{width:100%;height:100%;filter:drop-shadow(0 0 4px rgba(255,77,106,0.8));}
+.sim-progress-note{font-family:var(--mono);font-size:.7rem;color:var(--text-low);text-align:center;margin-top:8px;}
+
+@media (max-width:980px){
+  .main-grid{grid-template-columns:1fr;grid-template-rows:auto;}
+  .map-wrap{display:none;}
+  .tracker-panel{display:none;}
+  .mobile-track{display:block;grid-column:1 / -1;width:100%;max-width:100%;box-sizing:border-box;overflow:visible;}
+  #detail-panel{width:100%;}
+  .status-bar{padding:12px 14px;gap:10px;}
+  .progress-wrap{order:5;width:100%;min-width:0;}
+}
+@media (max-width:480px){
+  .alert-card{padding:30px 22px;}
+  .panel-head{padding:18px 18px 14px;}
+  .panel-body{padding:18px 18px 36px;}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+  body.glitching #app{animation:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="particles"><canvas id="particle-canvas"></canvas></div>
+<div class="grid-overlay"></div>
+<div class="scanline"></div>
+
+<div id="loading-screen">
+  <div class="loader-box">
+    <div class="loader-top"><span>SECURE BOOT SEQUENCE</span><span id="boot-pct-top">0%</span></div>
+    <div class="loader-frame">
+      <div class="loader-title"><span class="dot"></span>CYBERGUARD OS</div>
+      <div id="boot-lines"></div>
+      <div class="loader-bar-track"><div class="loader-bar-fill" id="loader-bar"></div></div>
+      <div class="loader-pct" id="loader-pct">Initializing…</div>
+    </div>
+  </div>
+</div>
+
+<div id="alert-screen">
+  <div class="alert-card">
+    <div class="alert-badge"><span class="ping"></span> SECURITY ALERT</div>
+    <h1 class="alert-title">⚠ Suspicious Login Attempt Detected</h1>
+    <p class="alert-body">An unrecognized device just attempted to access a protected account. The session has been flagged for investigation.</p>
+    <div class="alert-mission"><b>YOUR MISSION</b><br>Investigate the incident, identify the threat, respond effectively,<br>and secure the digital environment.</div>
+    <button class="btn-primary" id="start-mission-btn"><span class="shine"></span>Start Mission</button>
+    <div class="alert-hint">Press ENTER or click to begin · Use arrow keys to navigate the mission map</div>
+  </div>
+</div>
+
+<div id="app">
+  <header class="status-bar">
+    <div class="brand"><div class="brand-mark">CG</div><div class="brand-text">Cyber<span>Guard</span></div></div>
+    <div class="status-chip threat"><span class="dot"></span>Threat Level: Elevated</div>
+    <div class="status-chip"><span class="dot"></span>Encryption Active</div>
+    <div class="status-chip" id="clock"><span class="dot"></span>00:00:00</div>
+    <div class="progress-wrap"><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div><div class="progress-label" id="progress-label">0%</div></div>
+    <button class="icon-btn" id="sound-toggle" title="Toggle sound effects" aria-label="Toggle sound effects">🔊</button>
+  </header>
+
+  <div class="main-grid">
+    <div class="map-wrap">
+      <div id="map-stage">
+        <div class="radar-rings" id="radar-rings"></div>
+        <div class="radar-sweep"></div>
+        <svg id="connections"></svg>
+        <div class="center-node" id="center-node" tabindex="0" role="button" aria-label="Mission overview">
+          <div><span class="ct">CYBERSECURITY<br>AWARENESS</span><span class="cs">MISSION CONTROL</span></div>
+        </div>
+      </div>
+    </div>
+    <aside class="tracker-panel">
+      <div class="tracker-h">📡 Mission Tracker</div>
+      <div class="tracker-list" id="tracker-list"></div>
+      <div class="tracker-h">🏅 Badges</div>
+      <div class="badges-grid" id="badges-grid"></div>
+    </aside>
+    <div class="mobile-track"><div class="mt-line" id="mobile-track-list"></div></div>
+  </div>
+</div>
+
+<div id="panel-overlay"></div>
+<div id="detail-panel" role="dialog" aria-modal="true" aria-labelledby="panel-title-el">
+  <div class="panel-head">
+    <div class="ph-icon" id="panel-icon">🛰️</div>
+    <div class="ph-text"><div class="panel-eyebrow" id="panel-eyebrow">NODE</div><div class="panel-title" id="panel-title-el">Title</div></div>
+    <button class="panel-close" id="panel-close" aria-label="Close panel">✕</button>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+</div>
+
+<div class="hack-flash" id="hack-flash"></div>
+<div id="hack-takeover">
+  <div class="hack-popup">
+    <div class="hp-icon">☠️</div>
+    <div class="hp-title">SYSTEM COMPROMISED</div>
+    <div class="hp-sub">The "installer" was a dropper. It just opened a remote shell into this page. Watch what happens next — then press <b>Esc</b> or <b>Enter</b> any time to break the connection.</div>
+    <button class="btn-sim danger" id="hack-watch-btn">Continue ▸</button>
+  </div>
+</div>
+<div id="hack-term-wrap">
+  <div>
+    <div class="term-window">
+      <div class="term-titlebar"><span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span><span class="term-titletext">remote-shell@unknown-host — intrusion in progress</span></div>
+      <div class="term-body" id="hack-term-body"></div>
+    </div>
+    <div class="hack-term-hint">Press <kbd>Esc</kbd> or <kbd>Enter</kbd> to disconnect the attacker now</div>
+  </div>
+</div>
+<div class="fake-cursor" id="fake-cursor">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2L20 12L12.5 13.5L16 21L13 22.5L9.5 15L4 19V2Z" fill="#ff4d6a" stroke="#ffe2e7" stroke-width="1"/></svg>
+</div>
+<script>
+(function(){
+"use strict";
+
+var state = {
+  visited: new Set(),
+  badgesUnlocked: new Set(),
+  quizIndex: 0,
+  quizScore: 0,
+  quizDone: false,
+  soundOn: true,
+  audioCtx: null,
+  currentPanel: null,
+  reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  preventChecks: {},
+  flowChecks: {}
+};
+
+var NODES = [
+  {id:'fundamentals', icon:'🛡️', label:'Cyber<br>Fundamentals', eyebrow:'NODE 01 / 11', title:'Cybersecurity Fundamentals', badgeIcon:'🛡️', badgeName:'Foundations'},
+  {id:'threats',       icon:'🎭', label:'Common<br>Threats',     eyebrow:'NODE 02 / 11', title:'Common Cyber Threats',          badgeIcon:'🎭', badgeName:'Threat Hunter'},
+  {id:'warning',       icon:'🚨', label:'Warning<br>Signs',      eyebrow:'NODE 03 / 11', title:'Warning Signs',                 badgeIcon:'🚨', badgeName:'Spotter'},
+  {id:'incident',      icon:'🧯', label:'Incident<br>Response',  eyebrow:'NODE 04 / 11', title:'Incident Response',             badgeIcon:'🧯', badgeName:'First Responder'},
+  {id:'fraud',         icon:'💳', label:'Financial<br>Fraud',    eyebrow:'NODE 05 / 11', title:'Financial Fraud Response',      badgeIcon:'💳', badgeName:'Fraud Fighter'},
+  {id:'reporting',     icon:'📋', label:'Reporting<br>Cybercrime',eyebrow:'NODE 06 / 11',title:'Reporting Cybercrime',          badgeIcon:'📋', badgeName:'Reporter'},
+  {id:'prevention',    icon:'🔐', label:'Prevention<br>Strategies',eyebrow:'NODE 07 / 11',title:'Prevention Strategies',        badgeIcon:'🔐', badgeName:'Guardian'},
+  {id:'case-study',    icon:'📖', label:'Case<br>Study',         eyebrow:'NODE 08 / 11', title:'Real-Life Case Study',          badgeIcon:'📖', badgeName:'Analyst'},
+  {id:'sim-cred',      icon:'🔓', label:'Lab: Crack<br>a Password',eyebrow:'SIM LAB 09 / 11',title:'Simulation — Password Cracking', badgeIcon:'🔓', badgeName:'Pen Tester', sim:true},
+  {id:'sim-ransom',    icon:'💀', label:'Lab: Fake<br>Download',  eyebrow:'SIM LAB 10 / 11',title:'Simulation — The Cracked Game', badgeIcon:'💀', badgeName:'Survivor', sim:true},
+  {id:'quiz',          icon:'🧠', label:'Security<br>Quiz',      eyebrow:'NODE 11 / 11', title:'Cybersecurity Quiz',            badgeIcon:'🧠', badgeName:'Sharp Mind'},
+  {id:'complete',      icon:'🏁', label:'Mission<br>Complete',   eyebrow:'FINAL NODE',   title:'Mission Complete',              badgeIcon:'🏆', badgeName:'Commander', final:true}
+];
+
+function ensureAudio(){
+  if(!state.audioCtx){
+    try{ state.audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){}
+  }
+  return state.audioCtx;
+}
+function tone(freq, dur, type, vol, delay){
+  if(!state.soundOn) return;
+  var ctx = ensureAudio();
+  if(!ctx) return;
+  var t0 = ctx.currentTime + (delay||0);
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.type = type||'sine';
+  osc.frequency.setValueAtTime(freq, t0);
+  gain.gain.setValueAtTime(0, t0);
+  gain.gain.linearRampToValueAtTime(vol||0.08, t0+0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(t0);
+  osc.stop(t0+dur+0.02);
+}
+function sfxClick(){ tone(740,.07,'square',.05); }
+function sfxOpen(){ tone(520,.09,'sine',.06); tone(780,.1,'sine',.05,.06); }
+function sfxClose(){ tone(420,.08,'sine',.05); }
+function sfxGood(){ tone(660,.09,'sine',.07); tone(880,.12,'sine',.06,.09); tone(1100,.14,'sine',.05,.18); }
+function sfxBad(){ tone(220,.18,'sawtooth',.06); tone(160,.22,'sawtooth',.05,.09); }
+function sfxComplete(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.22,'sine',.07,i*.13); }); }
+function sfxBadge(){ tone(880,.12,'sine',.07); tone(1100,.16,'sine',.06,.1); }
+function sfxKey(){ tone(1200+Math.random()*400,.025,'square',.025); }
+function sfxAlarm(){ tone(900,.12,'square',.06); tone(700,.12,'square',.05,.13); }
+function sfxGlitch(){ tone(80+Math.random()*60,.05,'sawtooth',.04); }
+
+var GLYPH_BITS = ['0x4F2A','1010','#root','SYN','ACK','ssh://','0xFF','>_','AES-256','ping','base64','TCP/443'];
+function hackClickFX(x,y){
+  var ripple = document.createElement('div');
+  ripple.className = 'hack-ripple';
+  ripple.style.left = x+'px';
+  ripple.style.top  = y+'px';
+  document.body.appendChild(ripple);
+  setTimeout(function(){ ripple.remove(); }, 650);
+
+  var glyph = document.createElement('div');
+  glyph.className = 'hack-glyphs';
+  glyph.style.left = (x + (Math.random()*30-15))+'px';
+  glyph.style.top  = y+'px';
+  glyph.textContent = GLYPH_BITS[Math.floor(Math.random()*GLYPH_BITS.length)];
+  document.body.appendChild(glyph);
+  setTimeout(function(){ glyph.remove(); }, 750);
+}
+document.addEventListener('click', function(e){
+  if(state.reducedMotion) return;
+  if(e.target.tagName==='INPUT') return;
+  hackClickFX(e.clientX, e.clientY);
+}, true);
+
+(function particles(){
+  var canvas = document.getElementById('particle-canvas');
+  var ctx = canvas.getContext('2d');
+  var pts = [];
+  var W, H;
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  var count = Math.min(70, Math.round((window.innerWidth * window.innerHeight) / 22000));
+  for(var i = 0; i < count; i++){
+    pts.push({x: Math.random()*W, y: Math.random()*H, vx:(Math.random()-.5)*.18, vy:(Math.random()-.5)*.18, r: Math.random()*1.6+0.6});
+  }
+  function step(){
+    ctx.clearRect(0,0,W,H);
+    if(!state.reducedMotion){
+      for(var i=0;i<pts.length;i++){
+        var p=pts[i]; p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+        if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      }
+    }
+    for(var i=0;i<pts.length;i++){
+      for(var j=i+1;j<pts.length;j++){
+        var a=pts[i], b=pts[j];
+        var dx=a.x-b.x, dy=a.y-b.y, d2=dx*dx+dy*dy;
+        if(d2<140*140){
+          var op=1-Math.sqrt(d2)/140;
+          ctx.strokeStyle='rgba(73,230,255,'+(op*.16)+')';
+          ctx.lineWidth=1;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    }
+    for(var i=0;i<pts.length;i++){
+      var p=pts[i];
+      ctx.fillStyle='rgba(94,196,255,0.55)';
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    }
+    requestAnimationFrame(step);
+  }
+  step();
+})();
+
+(function boot(){
+  var lines = [
+    'Establishing secure connection...',
+    'Loading threat intelligence database...',
+    'Calibrating intrusion sensors...',
+    'Mounting mission control dashboard...',
+    'Encrypting session channel...',
+    'All systems nominal.'
+  ];
+  var box    = document.getElementById('boot-lines');
+  var bar    = document.getElementById('loader-bar');
+  var pctEl  = document.getElementById('loader-pct');
+  var pctTop = document.getElementById('boot-pct-top');
+  var i = 0;
+  function next(){
+    if(i >= lines.length){
+      setTimeout(function(){
+        document.getElementById('loading-screen').classList.add('hidden');
+        showAlertScreen();
+      }, 420);
+      return;
+    }
+    var div = document.createElement('div');
+    div.className = 'line' + (i === lines.length-1 ? ' ok' : '');
+    div.textContent = (i === lines.length-1 ? '✓ ' : '> ') + lines[i];
+    box.appendChild(div);
+    var pct = Math.round(((i+1)/lines.length)*100);
+    bar.style.width = pct+'%';
+    pctEl.textContent  = pct < 100 ? 'Initializing… '+pct+'%' : 'Ready.';
+    pctTop.textContent = pct+'%';
+    i++;
+    setTimeout(next, 380);
+  }
+  setTimeout(next, 300);
+})();
+
+function showAlertScreen(){
+  document.getElementById('alert-screen').classList.add('visible');
+}
+
+document.getElementById('start-mission-btn').addEventListener('click', startMission);
+document.addEventListener('keydown', function(e){
+  var alert = document.getElementById('alert-screen');
+  if(e.key==='Enter' && alert.classList.contains('visible') && !alert.classList.contains('exiting')){
+    startMission();
+  }
+});
+
+function startMission(){
+  sfxOpen();
+  var alertScreen = document.getElementById('alert-screen');
+  alertScreen.classList.add('exiting');
+  setTimeout(function(){
+    alertScreen.style.display = 'none';
+    var app = document.getElementById('app');
+    app.style.display = 'flex';
+    requestAnimationFrame(function(){ app.classList.add('visible'); });
+    buildMap();
+    renderTracker();
+    renderBadges();
+    renderMobileTrack();
+    startClock();
+  }, 480);
+}
+
+function startClock(){
+  var clockEl = document.getElementById('clock');
+  function tick(){
+    var d = new Date();
+    var hh = String(d.getHours()).padStart(2,'0');
+    var mm = String(d.getMinutes()).padStart(2,'0');
+    var ss = String(d.getSeconds()).padStart(2,'0');
+    clockEl.innerHTML = '<span class="dot"></span>'+hh+':'+mm+':'+ss;
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+function buildMap(){
+  var stage    = document.getElementById('map-stage');
+  var ringsWrap = document.getElementById('radar-rings');
+
+  [30,55,80].forEach(function(s){
+    var r = document.createElement('div');
+    r.className = 'radar-ring';
+    r.style.width  = s+'%';
+    r.style.height = s+'%';
+    r.style.left   = (50-s/2)+'%';
+    r.style.top    = (50-s/2)+'%';
+    ringsWrap.appendChild(r);
+  });
+
+  var radius = 36;
+  NODES.forEach(function(node, i){
+    var angle = (-90 + i*(360/NODES.length)) * Math.PI/180;
+    var left  = 50 + radius*Math.cos(angle);
+    var top   = 50 + radius*Math.sin(angle);
+    node._left = left;
+    node._top  = top;
+
+    var btn = document.createElement('button');
+    btn.className = 'node-btn' + (node.final ? ' final' : '') + (node.sim ? ' sim' : '');
+    btn.style.left = left+'%';
+    btn.style.top  = top+'%';
+    btn.dataset.id = node.id;
+    btn.setAttribute('aria-label', node.title);
+    btn.innerHTML = '<span class="n-num">'+String(i+1).padStart(2,'0')+'</span><span class="n-icon">'+node.icon+'</span><span class="n-label">'+node.label+'</span>';
+    btn.addEventListener('click', function(){ sfxClick(); openPanel(node.id); });
+    stage.appendChild(btn);
+  });
+
+  document.getElementById('center-node').addEventListener('click', function(){ sfxClick(); openPanel('fundamentals'); });
+
+  drawConnections();
+}
+
+function drawConnections(){
+  var svg = document.getElementById('connections');
+  svg.innerHTML = '';
+  NODES.forEach(function(node){
+    var line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1','50%'); line.setAttribute('y1','50%');
+    line.setAttribute('x2', node._left+'%'); line.setAttribute('y2', node._top+'%');
+    line.setAttribute('class','conn-line' + (state.visited.has(node.id) ? ' done' : ''));
+    svg.appendChild(line);
+  });
+}
+
+function renderTracker(){
+  var wrap = document.getElementById('tracker-list');
+  wrap.innerHTML = '';
+  NODES.forEach(function(node){
+    var done = state.visited.has(node.id);
+    var item = document.createElement('div');
+    item.className = 'tracker-item' + (done ? ' done' : '');
+    item.innerHTML = '<span class="chk">'+(done?'✓':'')+'</span><span>'+node.icon+' '+node.title+'</span>';
+    item.addEventListener('click', function(){ sfxClick(); openPanel(node.id); });
+    wrap.appendChild(item);
+  });
+}
+
+function renderBadges(){
+  var wrap = document.getElementById('badges-grid');
+  wrap.innerHTML = '';
+  NODES.forEach(function(node){
+    var unlocked = state.badgesUnlocked.has(node.id);
+    var b = document.createElement('div');
+    b.className = 'badge' + (unlocked ? ' unlocked' : '');
+    b.title = node.badgeName + (unlocked ? ' — unlocked' : ' — locked');
+    b.textContent = node.badgeIcon;
+    wrap.appendChild(b);
+  });
+}
+
+function renderMobileTrack(){
+  var wrap = document.getElementById('mobile-track-list');
+  wrap.innerHTML = '';
+  NODES.forEach(function(node){
+    var done = state.visited.has(node.id);
+    var item = document.createElement('div');
+    item.className = 'mt-item' + (done ? ' done' : '');
+    item.innerHTML = '<span class="mt-icon">'+node.icon+'</span><span class="mt-text"><b>'+node.title+'</b><span>'+(done ? 'Completed' : 'Tap to open')+'</span></span>';
+    item.addEventListener('click', function(){ sfxClick(); openPanel(node.id); });
+    wrap.appendChild(item);
+  });
+}
+
+function markVisited(id){
+  var wasNew = !state.visited.has(id);
+  state.visited.add(id);
+  if(wasNew){
+    state.badgesUnlocked.add(id);
+    sfxBadge();
+    updateProgress();
+    renderTracker();
+    renderBadges();
+    renderMobileTrack();
+    refreshNodeButtonStates();
+    drawConnections();
+  }
+}
+
+function updateProgress(){
+  var pct = Math.round((state.visited.size / NODES.length) * 100);
+  document.getElementById('progress-fill').style.width  = pct+'%';
+  document.getElementById('progress-label').textContent = pct+'%';
+}
+
+function refreshNodeButtonStates(){
+  document.querySelectorAll('.node-btn').forEach(function(btn){
+    btn.classList.toggle('done', state.visited.has(btn.dataset.id));
+  });
+}
+
+var builders = {};
+
+builders.fundamentals = function(){
+  return ''+
+    '<h4>What Is Cybersecurity?</h4>'+
+    '<p>Cybersecurity is the practice of protecting systems, networks, devices, and personal data from digital attacks.</p>'+
+    '<p>Every day, people use smartphones, social media, online banking, and cloud services. Cybersecurity ensures these digital assets remain safe from unauthorized access and misuse.</p>'+
+    '<h4>The Three Pillars (CIA Triad)</h4>'+
+    '<ul>'+
+      '<li><b>Confidentiality</b> — only the right people can see the data.</li>'+
+      '<li><b>Integrity</b> — the data hasn\'t been secretly changed.</li>'+
+      '<li><b>Availability</b> — the system stays up when you need it.</li>'+
+    '</ul>'+
+    '<h4>Why It Matters</h4>'+
+    '<ul>'+
+      '<li>Protects personal information</li>'+
+      '<li>Prevents financial loss</li>'+
+      '<li>Maintains privacy</li>'+
+      '<li>Secures organizations</li>'+
+      '<li>Reduces cybercrime risk</li>'+
+    '</ul>'+
+    '<div class="callout fact"><b>Fun fact —</b> more than 90% of cyber attacks begin with human error, not a broken firewall.</div>'+
+    '<div class="sim-explain">Two hands-on labs further down this mission map (<b>Lab 09</b> and <b>Lab 10</b>) let you watch a password get cracked and a fake download hijack a page, fully simulated and harmless, so the theory below has something real to anchor to.</div>';
+};
+
+builders.threats = function(){
+  return ''+
+    '<h4>Know Your Enemy</h4>'+
+    '<p>Four threats every internet user should be able to recognize on sight. Tap a card to expand it.</p>'+
+    '<div class="threat-grid">'+
+      '<div class="threat-card" data-threat="phishing">'+
+        '<div class="threat-head"><span class="t-icon">🎣</span><span class="t-name">Phishing</span><span class="threat-toggle-hint">details</span></div>'+
+        '<p>Fake emails, messages, or websites designed to steal sensitive information.</p>'+
+        '<div class="code-box bad">"Your bank account will be suspended.\nClick here immediately to verify your details."</div>'+
+        '<div class="threat-extra">'+
+          '<p><b>How it spreads:</b> email, SMS ("smishing"), and even voice calls ("vishing"). The link usually leads to a cloned login page that captures whatever you type.</p>'+
+          '<ul><li>Urgency + fear is the bait ("suspended", "act now")</li><li>Sender address is close but not exact (mybank-secure.com vs mybank.com)</li><li>Generic greeting instead of your real name</li></ul>'+
+        '</div>'+
+      '</div>'+
+      '<div class="threat-card" data-threat="malware">'+
+        '<div class="threat-head"><span class="t-icon">🦠</span><span class="t-name">Malware</span><span class="threat-toggle-hint">details</span></div>'+
+        '<p>Malicious software designed to damage systems or steal data.</p>'+
+        '<ul><li>Viruses</li><li>Trojans</li><li>Spyware</li><li>Keyloggers</li></ul>'+
+        '<div class="threat-extra">'+
+          '<p>Malware often hides inside something you wanted: a "free" app, a cracked game, a pirated movie file, or a fake update pop-up. Lab 10 below walks through exactly this scenario.</p>'+
+          '<div class="callout fact"><b>Tell —</b> if an installer asks to disable your antivirus before it will run, that\'s the malware talking, not the software.</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="threat-card" data-threat="ransomware">'+
+        '<div class="threat-head"><span class="t-icon">🔒</span><span class="t-name">Ransomware</span><span class="threat-toggle-hint">details</span></div>'+
+        '<p>Attackers encrypt your files and demand payment for their release.</p>'+
+        '<ul><li>Data loss</li><li>Business disruption</li><li>Financial damage</li></ul>'+
+        '<div class="threat-extra">'+
+          '<p>Modern ransomware gangs often steal a copy of your data <i>before</i> encrypting it — a "double extortion" play, so paying doesn\'t guarantee your files stay private.</p>'+
+          '<div class="callout critical"><b>Never assume —</b> paying the ransom does not guarantee you get your files back, or that the attacker leaves quietly.</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="threat-card" data-threat="social">'+
+        '<div class="threat-head"><span class="t-icon">🎭</span><span class="t-name">Social Engineering</span><span class="threat-toggle-hint">details</span></div>'+
+        '<p>Manipulating people directly into revealing confidential information.</p>'+
+        '<div class="code-box bad">"Hello, this is your IT department.\nPlease share your OTP to verify your account."</div>'+
+        '<div class="threat-extra">'+
+          '<p>This is the human exploit behind almost every other attack on this list — phishing and vishing are just delivery methods for social engineering.</p>'+
+          '<ul><li>Pretexting — inventing a believable reason to ask</li><li>Authority — pretending to be IT, police, or a manager</li><li>Reciprocity — "I helped you, now help me" framing</li></ul>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+};
+
+builders.warning = function(){
+  return ''+
+    '<h4>Can You Spot The Attack?</h4>'+
+    '<ul>'+
+      '<li>Unexpected login alerts</li>'+
+      '<li>Unknown transactions</li>'+
+      '<li>Strange emails sent from your own account</li>'+
+      '<li>Sudden password changes you did not make</li>'+
+      '<li>Device slowing down unexpectedly</li>'+
+      '<li>Unknown software installations</li>'+
+    '</ul>'+
+    '<div class="callout fact"><b>Pattern —</b> one odd sign alone might be nothing. Two or more together, especially around the same time, is when to act.</div>'+
+    '<div class="challenge-box">'+
+      '<div class="challenge-q">🎯 Mission Challenge<br>You receive a password reset email you did not request. What should you do?</div>'+
+      '<div class="choice-list" id="warn-choices">'+
+        '<button class="choice-btn" data-correct="false">Click the link immediately to investigate</button>'+
+        '<button class="choice-btn" data-correct="true">Ignore and delete it, then review account activity</button>'+
+        '<button class="choice-btn" data-correct="false">Forward it to friends to see what they think</button>'+
+      '</div>'+
+      '<div class="choice-feedback" id="warn-feedback"></div>'+
+    '</div>'+
+    '<div class="challenge-box">'+
+      '<div class="challenge-q">🎯 Second Challenge<br>Your laptop fan spins at full speed even when idle, and a program you don\'t recognize is in your startup list. What\'s the safest first move?</div>'+
+      '<div class="choice-list" id="warn-choices-2">'+
+        '<button class="choice-btn" data-correct="false">Restart and ignore it — fans are normal</button>'+
+        '<button class="choice-btn" data-correct="true">Disconnect from the internet and run a security scan</button>'+
+        '<button class="choice-btn" data-correct="false">Open the unknown program to see what it does</button>'+
+      '</div>'+
+      '<div class="choice-feedback" id="warn-feedback-2"></div>'+
+    '</div>';
+};
+
+builders.incident = function(){
+  var steps = [
+    ['Stay Calm',            'Panic leads to mistakes — take a breath and think before acting.'],
+    ['Disconnect',           'Disconnect affected devices from the internet to stop further unauthorized access.'],
+    ['Preserve Evidence',    'Collect screenshots, emails, messages, and transaction records before anything changes.'],
+    ['Secure Accounts',      'Change passwords, enable two-factor authentication, and log out of all active sessions.'],
+    ['Notify Relevant Parties','Inform your bank, organization, IT team, and family members as needed.']
+  ];
+  var html = '<h4>You Have Been Hacked. What Next?</h4><p>Tap each numbered marker as you mentally check it off — this is the order that actually limits damage.</p><div class="flow-steps">';
+  steps.forEach(function(s, i){
+    html += '<div class="flow-step"><div class="fs-title-row"><div class="fs-num" data-step="'+i+'">'+(i+1)+'</div><div class="fs-title">'+s[0]+'</div></div><div class="fs-desc">'+s[1]+'</div></div>';
+  });
+  html += '</div><div class="callout success" id="incident-complete-msg" style="display:none;"><b>All steps checked —</b> that\'s the full response loop. In a real incident, steps 2 and 3 should happen almost simultaneously.</div>';
+  return html;
+};
+
+builders.fraud = function(){
+  return ''+
+    '<h4>When Money Is Involved</h4>'+
+    '<p>If your banking information has been compromised, every minute counts.</p>'+
+    '<ul>'+
+      '<li>Contact your bank immediately</li>'+
+      '<li>Freeze or block affected cards</li>'+
+      '<li>Monitor all transactions closely</li>'+
+      '<li>Report fraudulent activity formally</li>'+
+    '</ul>'+
+    '<div class="callout critical"><b>Critical —</b> the first few hours are critical. Quick reporting can significantly reduce losses and increases the chance of recovery.</div>'+
+    '<h4>Common Money-Targeting Scams</h4>'+
+    '<ul>'+
+      '<li><b>Fake refund calls</b> — "we overcharged you, share your screen to get it back."</li>'+
+      '<li><b>UPI/QR collect requests</b> — a request disguised to look like you\'re receiving money, when you\'re actually approving a payment out.</li>'+
+      '<li><b>Investment "guaranteed return" schemes</b> — pressure to act before a deadline that doesn\'t really exist.</li>'+
+    '</ul>'+
+    '<div class="callout fact"><b>Rule of thumb —</b> no legitimate bank or payment app will ever ask you to share an OTP, PIN, or remote-access your screen to "help" you.</div>';
+};
+
+builders.reporting = function(){
+  return ''+
+    '<h4>Report It, Don\'t Ignore It</h4>'+
+    '<ul>'+
+      '<li>Supports ongoing investigations</li>'+
+      '<li>Helps protect others from the same attacker</li>'+
+      '<li>Creates an official record of the incident</li>'+
+      '<li>Improves systemic cyber safety for everyone</li>'+
+    '</ul>'+
+    '<h4>Evidence To Collect</h4>'+
+    '<ul>'+
+      '<li>Screenshots of all communications</li>'+
+      '<li>Phone numbers and email addresses used</li>'+
+      '<li>Transaction IDs and amounts</li>'+
+      '<li>Suspicious URLs or website links</li>'+
+    '</ul>'+
+    '<div class="callout success"><b>Remember —</b> evidence is valuable. Never delete messages or emails related to the attack before reporting.</div>'+
+    '<h4>Who To Report To</h4>'+
+    '<ul>'+
+      '<li>Your bank\'s fraud / dispute team, for financial loss</li>'+
+      '<li>The platform itself (report/block the account or message)</li>'+
+      '<li>Your local cybercrime authority or police cybercell</li>'+
+      '<li>Your organization\'s IT/security team, if it happened on a work device</li>'+
+    '</ul>';
+};
+
+var PREVENT_ITEMS = [
+  {id:'pw',     icon:'🔑', title:'Strong Passwords', body:'Mix length, symbols, and unpredictability.'},
+  {id:'mfa',    icon:'🧬', title:'Enable Multi-Factor Authentication', body:'Adds an extra verification layer beyond your password so attackers can\'t get in even if they know it.'},
+  {id:'update', icon:'🔄', title:'Keep Software Updated', body:'Updates contain critical security patches that close known vulnerabilities.'},
+  {id:'verify', icon:'🔍', title:'Verify Before Clicking', body:'Always inspect the link URL and the sender\'s actual email address before clicking anything.'},
+  {id:'backup', icon:'💾', title:'Backup Important Data', body:'Maintain regular offline and cloud backups so you can recover quickly after an attack.'}
+];
+builders.prevention = function(){
+  var html = '<h4>Stay One Step Ahead</h4><p>Check off the habits you already follow — and try the live password tester below.</p><div class="prevent-grid">';
+  PREVENT_ITEMS.forEach(function(it){
+    var on = !!state.preventChecks[it.id];
+    html += '<div class="prevent-card'+(on?' on':'')+'" data-pid="'+it.id+'"><div class="pc-title">'+it.icon+' '+it.title+'<span class="pc-check'+(on?' on':'')+'" data-pid="'+it.id+'">'+(on?'✓':'')+'</span></div><p>'+it.body+'</p>';
+    if(it.id==='pw'){
+      html +=
+        '<div class="code-box">Good: Cyber@Safe#2026</div>'+
+        '<div class="code-box bad">Avoid: 123456 · password · qwerty</div>'+
+        '<div class="pw-tester">'+
+          '<label for="pw-test-input">Try your own (nothing is saved or sent anywhere)</label>'+
+          '<input type="text" id="pw-test-input" placeholder="Type a sample password..." autocomplete="off" spellcheck="false">'+
+          '<div class="pw-meter-track"><div class="pw-meter-fill" id="pw-meter-fill"></div></div>'+
+          '<div class="pw-meter-label" id="pw-meter-label">Strength will appear here</div>'+
+        '</div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+};
+
+builders['case-study'] = function(){
+  var items = [
+    ['SCENARIO', 'An employee receives an email appearing to come from their manager.'],
+    ['REQUEST',  'The email requests an urgent invoice payment to a new vendor account.'],
+    ['ACTION',   'Without calling to verify, the employee transfers the money.'],
+    ['RESULT',   'Financial loss, a formal fraud investigation, and significant operational disruption follow.'],
+    ['LESSON',   'Always verify requests involving money or sensitive information — via phone or in person, never by replying to the same email.']
+  ];
+  var html = '<h4>The Cost Of One Click</h4><div class="timeline">';
+  items.forEach(function(it){
+    html += '<div class="tl-item"><div class="tl-k">'+it[0]+'</div><div class="tl-v">'+it[1]+'</div></div>';
+  });
+  html += '</div>';
+  html +=
+    '<div class="challenge-box">'+
+      '<div class="challenge-q">🎯 What was the single point of failure?</div>'+
+      '<div class="choice-list" id="case-choices">'+
+        '<button class="choice-btn" data-correct="false">The email looked unprofessional</button>'+
+        '<button class="choice-btn" data-correct="true">No out-of-band verification before moving money</button>'+
+        '<button class="choice-btn" data-correct="false">The amount requested was too small to notice</button>'+
+      '</div>'+
+      '<div class="choice-feedback" id="case-feedback"></div>'+
+    '</div>';
+  return html;
+};
+
+/* ===== SIM LAB 09 — PASSWORD CRACKING DEMO ===== */
+var simCred = { account: null };
+var COMMON_PASSWORDS = ['123456','password','arjun123','qwerty','admin123','letmein','football','iloveyou','welcome1','password1','12345678','monkey123','dragon99','sunshine1'];
+
+function pwStrengthScore(pw){
+  if(!pw) return 0;
+  var score = 0;
+  if(pw.length >= 8) score += 25;
+  if(pw.length >= 12) score += 15;
+  if(/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score += 20;
+  if(/[0-9]/.test(pw)) score += 15;
+  if(/[^A-Za-z0-9]/.test(pw)) score += 25;
+  var lower = pw.toLowerCase();
+  if(COMMON_PASSWORDS.indexOf(lower) !== -1) score = Math.min(score, 8);
+  if(/^[a-zA-Z]+[0-9]{1,3}$/.test(pw)) score = Math.min(score, 25);
+  return Math.max(0, Math.min(100, score));
+}
+function pwStrengthLabel(score){
+  if(score < 25) return {text:'Very weak — cracked in seconds', color:'var(--danger)'};
+  if(score < 50) return {text:'Weak — cracked quickly', color:'var(--danger)'};
+  if(score < 75) return {text:'Moderate — vulnerable to targeted attacks', color:'var(--amber)'};
+  return {text:'Strong — resistant to common attacks', color:'var(--success)'};
+}
+
+builders['sim-cred'] = function(){
+  simCred.account = null;
+  return renderSimCredForm();
+};
+
+function renderSimCredForm(){
+  return ''+
+    '<h4>Live Demo: How A Weak Password Falls</h4>'+
+    '<p>This is a fully simulated, self-contained lab — nothing here touches a real network or a real account. Create a practice login below, then hit <b>Hack It</b> to watch an automated cracking attempt run against it in a terminal.</p>'+
+    '<div class="sim-stage" id="sim-cred-stage">'+
+      '<div class="sim-step-label"><span class="pip"></span>STEP 1 — CREATE A TEST ACCOUNT</div>'+
+      '<div class="fake-form">'+
+        '<label for="sc-username">Username</label>'+
+        '<input type="text" id="sc-username" placeholder="e.g. arjun" autocomplete="off" spellcheck="false">'+
+        '<label for="sc-password">Password</label>'+
+        '<input type="text" id="sc-password" placeholder="e.g. arjun123" autocomplete="off" spellcheck="false">'+
+        '<div class="sim-strength-row"><div class="sim-strength-track"><div class="sim-strength-fill" id="sc-strength-fill"></div></div><div class="sim-strength-text" id="sc-strength-text">—</div></div>'+
+        '<button class="btn-sim" id="sc-create-btn">Create Test Account</button>'+
+      '</div>'+
+      '<div id="sc-created-zone"></div>'+
+    '</div>';
+}
+
+function wireSimCred(){
+  var userInp = document.getElementById('sc-username');
+  var passInp = document.getElementById('sc-password');
+  var fill = document.getElementById('sc-strength-fill');
+  var text = document.getElementById('sc-strength-text');
+  if(!userInp) return;
+
+  function updateMeter(){
+    var s = pwStrengthScore(passInp.value);
+    var lbl = pwStrengthLabel(s);
+    fill.style.width = s+'%';
+    fill.style.background = lbl.color;
+    text.textContent = passInp.value ? lbl.text.split(' — ')[0] : '—';
+  }
+  passInp.addEventListener('input', function(){ sfxKey(); updateMeter(); });
+  userInp.addEventListener('input', sfxKey);
+
+  document.getElementById('sc-create-btn').addEventListener('click', function(){
+    var u = userInp.value.trim() || 'arjun';
+    var p = passInp.value.trim() || 'arjun123';
+    simCred.account = {username:u, password:p, wasCracked:null};
+    sfxGood();
+    renderSimCredCreated();
+  });
+}
+
+function renderSimCredCreated(){
+  var zone = document.getElementById('sc-created-zone');
+  zone.innerHTML =
+    '<div class="sim-account-card"><span><span class="lbl">username:</span> '+escHtml(simCred.account.username)+'</span><span><span class="lbl">password:</span> '+'•'.repeat(Math.max(4,simCred.account.password.length))+'</span></div>'+
+    '<div class="sim-step-label" style="margin-top:14px;"><span class="pip"></span>STEP 2 — ATTACK IT</div>'+
+    '<p style="font-size:.85rem;margin-top:4px;">An attacker who only has your username can try to brute-force or dictionary-attack the password. Click below to simulate that attempt.</p>'+
+    '<button class="btn-sim danger" id="sc-hack-btn">💀 Hack It</button>'+
+    '<div class="sim-result-banner" id="sc-result-banner"></div>';
+  document.getElementById('sc-hack-btn').addEventListener('click', function(){
+    sfxAlarm();
+    launchCredTerminal(simCred.account);
+  });
+}
+
+function launchCredTerminal(account){
+  var zone = document.getElementById('sc-created-zone');
+  var existingTerm = document.getElementById('sc-term-wrap');
+  if(existingTerm) existingTerm.remove();
+
+  var wrap = document.createElement('div');
+  wrap.id = 'sc-term-wrap';
+  wrap.innerHTML =
+    '<div class="term-window">'+
+      '<div class="term-titlebar"><span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span><span class="term-titletext">cracklab@sandbox — password audit tool (simulated)</span></div>'+
+      '<div class="term-body" id="sc-term-body"></div>'+
+      '<div class="term-input-row" id="sc-term-input-row">'+
+        '<span class="tag">target_user&gt;</span>'+
+        '<input type="text" id="sc-term-username-input" placeholder="enter username and press Enter" autocomplete="off" spellcheck="false">'+
+        '<button class="term-go" id="sc-term-go">ENTER</button>'+
+      '</div>'+
+    '</div>';
+  zone.appendChild(wrap);
+
+  var body = document.getElementById('sc-term-body');
+  termPrintLines(body, [
+    {t:'CrackLab Auditor v2.1 — local simulation, no real network access', cls:'dim'},
+    {t:'Loaded ruleset: common-passwords.txt (14 entries) + brute-force fallback', cls:'dim'},
+    {t:'', cls:'dim'},
+    {t:'Enter the target username to begin:', cls:'hl'}
+  ], 80, function(){
+    var row = document.getElementById('sc-term-input-row');
+    var input = document.getElementById('sc-term-username-input');
+    input.focus();
+    function submit(){
+      var typed = input.value.trim();
+      if(!typed) return;
+      row.classList.add('hidden');
+      termPrintLines(body, [{t:'target_user> '+typed, cls:'prompt'}], 0, function(){
+        runCrackSequence(body, account, typed);
+      });
+    }
+    document.getElementById('sc-term-go').addEventListener('click', function(){ sfxClick(); submit(); });
+    input.addEventListener('keydown', function(e){ if(e.key==='Enter'){ sfxClick(); submit(); } });
+  });
+}
+
+function runCrackSequence(body, account, typedUsername){
+  var matchesAccount = typedUsername.toLowerCase() === account.username.toLowerCase();
+  var pw = account.password;
+  var lowerPw = pw.toLowerCase();
+  var isWeak = COMMON_PASSWORDS.indexOf(lowerPw) !== -1 || pwStrengthScore(pw) < 50;
+
+  var lines = [
+    {t:'', cls:'dim'},
+    {t:'[*] Resolving account "'+typedUsername+'"...', cls:'dim'},
+    {t: matchesAccount ? '[+] Account found in local sandbox DB.' : '[!] No matching sandbox account — generating a generic locked profile for demo.', cls: matchesAccount ? 'good':'warn'},
+    {t:'[*] Starting dictionary attack using common-passwords.txt...', cls:'dim'}
+  ];
+
+  var dictIndex = COMMON_PASSWORDS.indexOf(lowerPw);
+  var dictTries = isWeak && dictIndex !== -1 ? COMMON_PASSWORDS.slice(0, dictIndex+1) : COMMON_PASSWORDS.slice(0, 9);
+  dictTries.forEach(function(cand){
+    lines.push({t:'    trying "'+cand+'" ... '+(cand===lowerPw ? 'MATCH' : 'fail'), cls: cand===lowerPw ? 'good':'dim'});
+  });
+
+  if(isWeak && dictIndex !== -1){
+    lines.push({t:'', cls:'dim'});
+    lines.push({t:'[+] Dictionary match found after '+dictTries.length+' attempts.', cls:'good'});
+    lines.push({t:'[+] PASSWORD FOUND: "'+pw+'"', cls:'good'});
+    lines.push({t:'[+] ACCESS GRANTED — session token issued (simulated).', cls:'good'});
+  } else {
+    lines.push({t:'[*] No dictionary match. Escalating to brute-force (length '+pw.length+', mixed charset)...', cls:'dim'});
+    lines.push({t:'    keyspace estimate: ~'+bruteForceEstimate(pw)+' combinations', cls:'dim'});
+    lines.push({t:'    attempting common patterns + masks...', cls:'dim'});
+    lines.push({t:'    [████████████████████] timeout reached, no match', cls:'warn'});
+    lines.push({t:'', cls:'dim'});
+    lines.push({t:'[x] BRUTE-FORCE FAILED — password not cracked within sandbox limits.', cls:'bad'});
+    lines.push({t:'[x] ACCESS DENIED.', cls:'bad'});
+  }
+
+  termPrintLines(body, lines, 130, function(){
+    showCredResult(isWeak && dictIndex !== -1, account, pw);
+  });
+}
+
+function bruteForceEstimate(pw){
+  var pool = 0;
+  if(/[a-z]/.test(pw)) pool += 26;
+  if(/[A-Z]/.test(pw)) pool += 26;
+  if(/[0-9]/.test(pw)) pool += 10;
+  if(/[^A-Za-z0-9]/.test(pw)) pool += 32;
+  if(pool===0) pool = 10;
+  var combos = Math.pow(pool, pw.length || 1);
+  if(combos > 1e15) return (combos/1e15).toFixed(1)+' quadrillion';
+  if(combos > 1e12) return (combos/1e12).toFixed(1)+' trillion';
+  if(combos > 1e9) return (combos/1e9).toFixed(1)+' billion';
+  if(combos > 1e6) return (combos/1e6).toFixed(1)+' million';
+  return Math.round(combos).toLocaleString();
+}
+
+function showCredResult(cracked, account, pw){
+  account.wasCracked = cracked;
+  var banner = document.getElementById('sc-result-banner');
+  if(!banner) return;
+  banner.classList.add('show', cracked ? 'cracked' : 'safe');
+  if(cracked){
+    sfxBad();
+    banner.innerHTML =
+      '⚠ <b>PASSWORD CRACKED.</b> "'+escHtml(pw)+'" was found in seconds because it combined a dictionary word with a short, predictable number.'+
+      '<div class="sim-explain">This is exactly what happens to real accounts using passwords like <b>name + birth year</b> or <b>name123</b>. Automated tools test thousands of these per second — a human never needs to guess.</div>'+
+      '<div style="margin-top:12px;"><button class="btn-sim ghost" id="sc-retry-btn">↺ Try a stronger password instead</button></div>';
+  } else {
+    sfxGood();
+    banner.innerHTML =
+      '✅ <b>PASSWORD HELD.</b> The dictionary attack found no match, and brute-force ran out of practical time against this length and character mix.'+
+      '<div class="sim-explain">Longer passwords with a real character mix grow the search space exponentially — that\'s why length plus randomness beats clever substitutions like "P@ssw0rd".</div>'+
+      '<div style="margin-top:12px;"><button class="btn-sim ghost" id="sc-retry-btn">↺ Test another password</button></div>';
+  }
+  var retryBtn = document.getElementById('sc-retry-btn');
+  if(retryBtn){
+    retryBtn.addEventListener('click', function(){
+      sfxClick();
+      var stageEl = document.getElementById('sim-cred-stage');
+      stageEl.outerHTML = renderSimCredFormInner();
+      wireSimCred();
+    });
+  }
+  markVisited('sim-cred');
+}
+
+function renderSimCredFormInner(){
+  var temp = document.createElement('div');
+  temp.innerHTML = renderSimCredForm();
+  return temp.querySelector('#sim-cred-stage').outerHTML;
+}
+
+function termPrintLines(body, lines, delay, onDone){
+  var i = 0;
+  function next(){
+    if(i >= lines.length){
+      var cursor = document.createElement('div');
+      cursor.className = 'term-line';
+      cursor.style.opacity = '1';
+      cursor.innerHTML = '<span class="term-cursor"></span>';
+      body.appendChild(cursor);
+      if(onDone) onDone();
+      return;
+    }
+    var ln = lines[i];
+    var div = document.createElement('div');
+    div.className = 'term-line' + (ln.cls ? ' '+ln.cls : '');
+    div.textContent = ln.t;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+    if(ln.t && ln.t.trim()) sfxKey();
+    i++;
+    setTimeout(next, delay || 90);
+  }
+  next();
+}
+
+function escHtml(s){
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+/* ===== SIM LAB 10 — RANSOMWARE / FAKE DOWNLOAD DEMO ===== */
+var simRansom = {stage:'idle'};
+
+builders['sim-ransom'] = function(){
+  simRansom.stage = 'idle';
+  return ''+
+    '<h4>Live Demo: The "Free" Download Trap</h4>'+
+    '<p>This lab simulates a classic trojanized download. Everything below runs inside this page only — no real file is downloaded and nothing leaves your device. Follow the steps and watch what a real version of this would do to an unprotected machine.</p>'+
+    '<div class="sim-stage" id="sim-ransom-stage">'+
+      '<div class="sim-step-label"><span class="pip"></span>STEP 1 — A TEMPTING DOWNLOAD</div>'+
+      '<div class="dl-card">'+
+        '<div class="dl-thumb">🎮</div>'+
+        '<div class="dl-meta">'+
+          '<div class="dl-name">NeonRunner_2026_FULL_CRACKED.exe</div>'+
+          '<div class="dl-sub">⭐ "100% safe, no virus" — random-file-host.example</div>'+
+          '<div class="dl-progress-track"><div class="dl-progress-fill" id="dl-progress-fill"></div></div>'+
+          '<div class="dl-status" id="dl-status">187 MB · not downloaded</div>'+
+        '</div>'+
+      '</div>'+
+      '<button class="btn-sim" id="dl-download-btn" style="margin-top:12px;">⬇ Download</button>'+
+      '<div class="sim-explain" id="dl-explain">Cracked-game sites are one of the most common malware delivery channels — the "crack" is frequently the payload itself, not just a way to skip paying.</div>'+
+    '</div>';
+};
+
+function wireSimRansom(){
+  var btn = document.getElementById('dl-download-btn');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    if(simRansom.stage !== 'idle') return;
+    simRansom.stage = 'downloading';
+    sfxClick();
+    runFakeDownload();
+  });
+}
+
+function runFakeDownload(){
+  var fill = document.getElementById('dl-progress-fill');
+  var status = document.getElementById('dl-status');
+  var btn = document.getElementById('dl-download-btn');
+  btn.disabled = true;
+  btn.textContent = 'Downloading…';
+  var pct = 0;
+  var iv = setInterval(function(){
+    pct += Math.random()*14 + 6;
+    if(pct >= 100){
+      pct = 100;
+      clearInterval(iv);
+      fill.style.width = '100%';
+      status.textContent = '187 MB · download complete';
+      simRansom.stage = 'downloaded';
+      btn.disabled = false;
+      btn.textContent = '▶ Install';
+      sfxGood();
+      var newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+      newBtn.addEventListener('click', function(){
+        sfxAlarm();
+        runFakeInstall();
+      });
+      return;
+    }
+    fill.style.width = pct+'%';
+    status.textContent = '187 MB · downloading… '+Math.round(pct)+'%';
+    sfxKey();
+  }, 180);
+}
+
+function runFakeInstall(){
+  var btn = document.querySelector('#sim-ransom-stage .btn-sim');
+  if(btn){ btn.disabled = true; btn.textContent = 'Installing…'; }
+  var status = document.getElementById('dl-status');
+  if(status) status.textContent = '187 MB · running installer...';
+  setTimeout(function(){
+    markVisited('sim-ransom');
+    triggerHackTakeover();
+  }, 900);
+}
+
+function triggerHackTakeover(){
+  document.getElementById('hack-takeover').classList.add('show');
+  var flash = document.getElementById('hack-flash');
+  flash.classList.add('flash');
+  setTimeout(function(){ flash.classList.remove('flash'); }, 400);
+  sfxAlarm();
+}
+
+document.getElementById('hack-watch-btn').addEventListener('click', function(){
+  sfxClick();
+  document.getElementById('hack-takeover').classList.remove('show');
+  startHackTerminalSequence();
+});
+
+var hackTermTimer = null;
+
+function startHackTerminalSequence(){
+  document.getElementById('hack-term-wrap').classList.add('show');
+  document.body.classList.add('glitching');
+  var cursor = document.getElementById('fake-cursor');
+  cursor.classList.add('show');
+  animateFakeCursor();
+
+  var body = document.getElementById('hack-term-body');
+  body.innerHTML = '';
+
+  var lines = [
+    {t:'[remote] connection established :: 198.51.100.23:4444', cls:'bad'},
+    {t:'[remote] uploading payload stage2.bin ... done', cls:'dim'},
+    {t:'[remote] executing dropper from NeonRunner_2026_FULL_CRACKED.exe', cls:'warn'},
+    {t:'', cls:'dim'},
+    {t:'> whoami', cls:'prompt'},
+    {t:'  SYSTEM\\you', cls:'dim'},
+    {t:'> scanning local drives for documents, photos, .docx, .xlsx, .pdf...', cls:'dim'},
+    {t:'  found 1,482 files', cls:'dim'},
+    {t:'> disabling Windows Defender real-time protection... done', cls:'bad'},
+    {t:'> disabling System Restore... done', cls:'bad'},
+    {t:'> beginning encryption pass (AES-256) on user files...', cls:'bad'},
+    {t:'  [▓▓▓▓▓▓▓▓░░░░░░░░░░░░] 41% encrypted', cls:'bad'},
+    {t:'  [▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░] 68% encrypted', cls:'bad'},
+    {t:'  [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100% encrypted', cls:'bad'},
+    {t:'> dropping ransom note README_RECOVER_FILES.txt on Desktop', cls:'warn'},
+    {t:'> exfiltrating 1,482 files to remote server before demanding payment...', cls:'bad'},
+    {t:'', cls:'dim'},
+    {t:'╔══════════════════════════════════════════╗', cls:'bad'},
+    {t:'║  ALL YOUR FILES ARE ENCRYPTED.            ║', cls:'bad'},
+    {t:'║  Pay 0.6 BTC within 48 hours or they      ║', cls:'bad'},
+    {t:'║  will be published online.                ║', cls:'bad'},
+    {t:'╚══════════════════════════════════════════╝', cls:'bad'},
+    {t:'', cls:'dim'},
+    {t:'[this is a simulation — nothing on your device was touched]', cls:'hl'},
+    {t:'press ESC or ENTER to disconnect the attacker', cls:'hl'}
+  ];
+
+  hackTermPrint(body, lines, 0);
+}
+
+function hackTermPrint(body, lines, idx){
+  if(hackTermTimer){ clearTimeout(hackTermTimer); hackTermTimer = null; }
+  function step(i){
+    if(i >= lines.length){
+      var cursor = document.createElement('div');
+      cursor.className = 'term-line';
+      cursor.style.opacity='1';
+      cursor.innerHTML = '<span class="term-cursor"></span>';
+      body.appendChild(cursor);
+      return;
+    }
+    var ln = lines[i];
+    var div = document.createElement('div');
+    div.className = 'term-line' + (ln.cls ? ' '+ln.cls : '');
+    div.textContent = ln.t;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+    if(ln.t && ln.t.trim()){ sfxGlitch(); }
+    hackTermTimer = setTimeout(function(){ step(i+1); }, ln.t.indexOf('▓')!==-1 ? 230 : 170);
+  }
+  step(idx);
+}
+
+function animateFakeCursor(){
+  var cursor = document.getElementById('fake-cursor');
+  if(!cursor.classList.contains('show')) return;
+  var x = Math.random()*window.innerWidth;
+  var y = Math.random()*window.innerHeight*0.6 + window.innerHeight*0.1;
+  cursor.style.left = x+'px';
+  cursor.style.top = y+'px';
+  setTimeout(function(){
+    if(cursor.classList.contains('show')) animateFakeCursor();
+  }, 180 + Math.random()*220);
+}
+
+function endHackSequence(){
+  if(hackTermTimer){ clearTimeout(hackTermTimer); hackTermTimer = null; }
+  document.getElementById('hack-term-wrap').classList.remove('show');
+  document.body.classList.remove('glitching');
+  document.getElementById('fake-cursor').classList.remove('show');
+  sfxClose();
+  if(state.currentPanel === 'sim-ransom'){
+    document.getElementById('panel-body').innerHTML = renderRansomDebrief();
+    wireRansomDebrief();
+  }
+}
+
+document.addEventListener('keydown', function(e){
+  var termVisible = document.getElementById('hack-term-wrap').classList.contains('show');
+  var popupVisible = document.getElementById('hack-takeover').classList.contains('show');
+  if((e.key==='Escape' || e.key==='Enter') && termVisible){
+    e.preventDefault();
+    endHackSequence();
+  } else if(e.key==='Escape' && popupVisible){
+    document.getElementById('hack-takeover').classList.remove('show');
+  }
+});
+
+function renderRansomDebrief(){
+  return ''+
+    '<h4>What Just Happened — Debrief</h4>'+
+    '<div class="callout critical"><b>You watched a simulated ransomware chain:</b> a trojanized "cracked" installer, silent defense tampering, mass file encryption, and a ransom note — all in under a minute, which is realistic for real attacks.</div>'+
+    '<h4>The Real Warning Signs You Skipped (on purpose, for the demo)</h4>'+
+    '<ul>'+
+      '<li>"Cracked" / pirated software from an unknown file host</li>'+
+      '<li>An installer that needs to disable your antivirus first</li>'+
+      '<li>A file much larger or smaller than the real software should be</li>'+
+      '<li>No publisher signature or verifiable source</li>'+
+    '</ul>'+
+    '<h4>What Actually Protects You</h4>'+
+    '<div class="prevent-grid">'+
+      '<div class="prevent-card"><div class="pc-title">💾 Offline backups</div><p>A backup that isn\'t connected when ransomware runs can\'t be encrypted with everything else.</p></div>'+
+      '<div class="prevent-card"><div class="pc-title">🛡️ Keep real-time protection on</div><p>Never disable your antivirus to "let an installer run" — that request is the attack.</p></div>'+
+      '<div class="prevent-card"><div class="pc-title">🔍 Only install from official sources</div><p>Official stores and the publisher\'s own site, not random file hosts.</p></div>'+
+    '</div>'+
+    '<button class="btn-sim ghost" id="ransom-replay-btn" style="margin-top:14px;">↺ Replay the simulation</button>';
+}
+function wireRansomDebrief(){
+  var btn = document.getElementById('ransom-replay-btn');
+  if(btn){
+    btn.addEventListener('click', function(){
+      sfxClick();
+      document.getElementById('panel-body').innerHTML = builders['sim-ransom']();
+      wireSimRansom();
+    });
+  }
+}
+
+var QUIZ = [
+  {q:'What is phishing?', opts:['A fishing activity', 'A cyber attack that tricks users into sharing information', 'A type of data backup'], correct:1},
+  {q:'Should you share an OTP with someone who calls and asks for it?', opts:['Yes, if they sound official', 'No — never share an OTP with anyone'], correct:1},
+  {q:'What should you do immediately after discovering unauthorized access to your account?', opts:['Ignore it and hope it resolves', 'Change your passwords immediately', 'Post about it on social media'], correct:1},
+  {q:'In the password lab, why was "arjun123" cracked so quickly?', opts:['It was too long', 'It combined a common name with a short predictable number', 'The attacker guessed randomly and got lucky'], correct:1},
+  {q:'In the download lab, what made the "cracked game" dangerous?', opts:['It was too large to download', 'It came from an official app store', 'It was a trojanized file from an unverified source'], correct:2}
+];
+
+builders.quiz = function(){
+  return state.quizDone ? renderQuizScore() : renderQuizQuestion();
+};
+
+function renderQuizQuestion(){
+  var q = QUIZ[state.quizIndex];
+  var html = '<h4>Cybersecurity Quiz</h4><div class="quiz-progress">QUESTION '+(state.quizIndex+1)+' OF '+QUIZ.length+'</div><div class="challenge-box"><div class="challenge-q">'+q.q+'</div><div class="choice-list" id="quiz-choices">';
+  q.opts.forEach(function(opt, i){ html += '<button class="choice-btn" data-i="'+i+'">'+opt+'</button>'; });
+  html += '</div><div class="choice-feedback" id="quiz-feedback"></div></div>';
+  return html;
+}
+
+function renderQuizScore(){
+  var pct = Math.round((state.quizScore / QUIZ.length)*100);
+  var msg = pct===100 ? 'Perfect score — sharp instincts.' : pct >= 66 ? 'Solid awareness. Review the areas you missed.' : 'Worth a second pass through the earlier nodes before proceeding.';
+  return ''+
+    '<h4>Mission Debrief</h4>'+
+    '<div class="quiz-score-screen">'+
+      '<div class="quiz-score-num">'+state.quizScore+' / '+QUIZ.length+'</div>'+
+      '<div class="quiz-score-label">Correct Answers</div>'+
+      '<p style="margin-top:14px;color:var(--text-mid);">'+msg+'</p>'+
+      '<button class="choice-btn" id="quiz-retry" style="margin-top:16px;">↺ Retry quiz</button>'+
+    '</div>';
+}
+
+builders.complete = function(){
+  var total = NODES.length - 1;
+  var done  = Array.from(state.visited).filter(function(id){ return id!=='complete'; }).length;
+  if(done < total){
+    return ''+
+      '<h4>Mission In Progress</h4>'+
+      '<p>'+done+' of '+total+' sections completed. Finish exploring the mission map — every node sharpens a different skill.</p>'+
+      '<div class="callout fact"><b>Tip —</b> the two Simulation Labs (09 &amp; 10) are the most memorable checkpoints — don\'t skip them before the quiz.</div>';
+  }
+  return ''+
+    '<div class="complete-hero"><div class="ch-icon">🏁</div><div class="ch-title">MISSION SUCCESSFUL</div></div>'+
+    '<h4>Key Takeaways</h4>'+
+    '<ul class="takeaway-list">'+
+      '<li>Recognize threats before they escalate</li>'+
+      '<li>Detect warning signs early</li>'+
+      '<li>Respond quickly and calmly</li>'+
+      '<li>Report incidents without delay</li>'+
+      '<li>Practice safe online behavior every day</li>'+
+      '<li>Weak passwords fall in seconds — length and randomness buy real time</li>'+
+      '<li>"Free" cracked downloads are one of the most common malware delivery paths</li>'+
+    '</ul>'+
+    '<blockquote class="final-msg">Cybersecurity is not just an IT responsibility. It is a shared responsibility.<span class="fm-line">Every click matters. Every password matters. Every decision matters.</span></blockquote>'+
+    '<div class="callout success" style="text-align:center;margin-top:20px;"><b>Thank you</b> — questions &amp; discussion welcome.</div>';
+};
+
+function openPanel(id){
+  var node = NODES.filter(function(n){ return n.id===id; })[0];
+  if(!node) return;
+  state.currentPanel = id;
+
+  document.getElementById('panel-icon').textContent     = node.icon;
+  document.getElementById('panel-eyebrow').textContent  = node.eyebrow;
+  document.getElementById('panel-title-el').textContent = node.title;
+  document.getElementById('panel-body').innerHTML       = builders[id]();
+
+  document.getElementById('panel-overlay').classList.add('visible');
+  document.getElementById('detail-panel').classList.add('visible');
+
+  document.getElementById('panel-close').focus();
+  sfxOpen();
+  wireInteractive(id);
+
+  if(id !== 'quiz' && id !== 'complete' && id !== 'sim-cred' && id !== 'sim-ransom'){ markVisited(id); }
+  if(id === 'complete'){ checkMissionComplete(); }
+}
+
+function closePanel(){
+  document.getElementById('panel-overlay').classList.remove('visible');
+  document.getElementById('detail-panel').classList.remove('visible');
+  sfxClose();
+  state.currentPanel = null;
+}
+
+document.getElementById('panel-close').addEventListener('click', closePanel);
+document.getElementById('panel-overlay').addEventListener('click', closePanel);
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape' && state.currentPanel){
+    var termVisible = document.getElementById('hack-term-wrap').classList.contains('show');
+    var popupVisible = document.getElementById('hack-takeover').classList.contains('show');
+    if(!termVisible && !popupVisible) closePanel();
+  }
+});
+
+function checkMissionComplete(){
+  var total = NODES.length - 1;
+  var done  = Array.from(state.visited).filter(function(id){ return id!=='complete'; }).length;
+  if(done >= total && !state.visited.has('complete')){
+    markVisited('complete');
+    sfxComplete();
+    document.getElementById('panel-body').innerHTML = builders.complete();
+  }
+}
+
+function wireInteractive(id){
+  if(id === 'threats'){
+    document.querySelectorAll('.threat-card').forEach(function(card){
+      card.addEventListener('click', function(){ sfxClick(); card.classList.toggle('open'); });
+    });
+    return;
+  }
+
+  if(id === 'warning'){
+    wireChoiceGroup('warn-choices', 'warn-feedback',
+      '✔ Correct — ignore and delete it, then review your account activity for unauthorized changes.',
+      '✘ Not quite. The safest move is to ignore and delete the email, then review your account activity.');
+    wireChoiceGroup('warn-choices-2', 'warn-feedback-2',
+      '✔ Correct — disconnect first, then scan. That stops anything from phoning home while you investigate.',
+      '✘ Not quite. Disconnect from the internet first, then run a scan — don\'t open the unknown program.');
+    return;
+  }
+
+  if(id === 'case-study'){
+    wireChoiceGroup('case-choices', 'case-feedback',
+      '✔ Correct — a quick phone call to confirm would have stopped this instantly.',
+      '✘ Not quite. The real failure was skipping a second, independent channel to verify the request.');
+    return;
+  }
+
+  if(id === 'incident'){
+    document.querySelectorAll('.fs-num').forEach(function(numEl){
+      numEl.addEventListener('click', function(){
+        sfxClick();
+        numEl.classList.toggle('checked');
+        var allChecked = Array.prototype.every.call(document.querySelectorAll('.fs-num'), function(n){ return n.classList.contains('checked'); });
+        var msg = document.getElementById('incident-complete-msg');
+        if(msg) msg.style.display = allChecked ? 'block' : 'none';
+        if(allChecked) sfxGood();
+      });
+    });
+    return;
+  }
+
+  if(id === 'prevention'){
+    document.querySelectorAll('.pc-check').forEach(function(chk){
+      chk.addEventListener('click', function(e){
+        e.stopPropagation();
+        var pid = chk.dataset.pid;
+        state.preventChecks[pid] = !state.preventChecks[pid];
+        sfxClick();
+        chk.classList.toggle('on', !!state.preventChecks[pid]);
+        chk.textContent = state.preventChecks[pid] ? '✓' : '';
+        chk.closest('.prevent-card').classList.toggle('on', !!state.preventChecks[pid]);
+      });
+    });
+    var pwInput = document.getElementById('pw-test-input');
+    if(pwInput){
+      var fill = document.getElementById('pw-meter-fill');
+      var label = document.getElementById('pw-meter-label');
+      pwInput.addEventListener('input', function(){
+        sfxKey();
+        var s = pwStrengthScore(pwInput.value);
+        var lbl = pwStrengthLabel(s);
+        fill.style.width = s+'%';
+        fill.style.background = lbl.color;
+        label.textContent = pwInput.value ? lbl.text : 'Strength will appear here';
+        label.style.color = pwInput.value ? lbl.color : 'var(--text-low)';
+      });
+    }
+    return;
+  }
+
+  if(id === 'sim-cred'){ wireSimCred(); return; }
+  if(id === 'sim-ransom'){ wireSimRansom(); return; }
+
+  if(id === 'quiz'){
+    if(state.quizDone){
+      var retry = document.getElementById('quiz-retry');
+      if(retry){
+        retry.addEventListener('click', function(){
+          state.quizDone  = false;
+          state.quizIndex = 0;
+          state.quizScore = 0;
+          openPanel('quiz');
+        });
+      }
+      return;
+    }
+    var qwrap = document.getElementById('quiz-choices');
+    if(!qwrap) return;
+    var q = QUIZ[state.quizIndex];
+    qwrap.querySelectorAll('.choice-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var chosen = parseInt(btn.dataset.i, 10);
+        var correct = chosen === q.correct;
+        qwrap.querySelectorAll('.choice-btn').forEach(function(b){
+          b.disabled = true;
+          if(parseInt(b.dataset.i,10) === q.correct) b.classList.add('correct');
+          else if(b===btn) b.classList.add('wrong');
+        });
+        var fb = document.getElementById('quiz-feedback');
+        fb.classList.add('show');
+        if(correct){
+          state.quizScore++;
+          fb.classList.add('good');
+          fb.textContent = '✔ Correct.';
+          sfxGood();
+        }else{
+          fb.classList.add('bad');
+          fb.textContent = '✘ Correct answer: '+q.opts[q.correct];
+          sfxBad();
+        }
+        setTimeout(function(){
+          if(state.quizIndex < QUIZ.length-1){
+            state.quizIndex++;
+          }else{
+            state.quizDone = true;
+            markVisited('quiz');
+          }
+          openPanel('quiz');
+        }, 1200);
+      });
+    });
+  }
+}
+
+function wireChoiceGroup(listId, feedbackId, goodMsg, badMsg){
+  var wrap = document.getElementById(listId);
+  if(!wrap) return;
+  wrap.querySelectorAll('.choice-btn').forEach(function(btn){
+    btn.addEventListener('click', function handler(){
+      wrap.querySelectorAll('.choice-btn').forEach(function(b){
+        b.disabled = true;
+        if(b.dataset.correct==='true') b.classList.add('correct');
+        else if(b===btn) b.classList.add('wrong');
+        b.removeEventListener('click', handler);
+      });
+      var fb = document.getElementById(feedbackId);
+      fb.classList.add('show');
+      if(btn.dataset.correct==='true'){
+        fb.classList.add('good');
+        fb.textContent = goodMsg;
+        sfxGood();
+      }else{
+        fb.classList.add('bad');
+        fb.textContent = badMsg;
+        sfxBad();
+      }
+    });
+  });
+}
+
+document.getElementById('sound-toggle').addEventListener('click', function(){
+  state.soundOn = !state.soundOn;
+  this.textContent = state.soundOn ? '🔊' : '🔇';
+  if(state.soundOn) sfxClick();
+});
+
+document.addEventListener('keydown', function(e){
+  if(state.currentPanel) return;
+  var app = document.getElementById('app');
+  if(!app.classList.contains('visible')) return;
+  var buttons = Array.prototype.slice.call(document.querySelectorAll('.node-btn'));
+  if(!buttons.length) return;
+  var focused = document.activeElement;
+  var idx = buttons.indexOf(focused);
+  if(e.key==='ArrowRight' || e.key==='ArrowDown'){
+    e.preventDefault();
+    buttons[(idx+1+buttons.length)%buttons.length].focus();
+  }else if(e.key==='ArrowLeft' || e.key==='ArrowUp'){
+    e.preventDefault();
+    buttons[(idx-1+buttons.length)%buttons.length].focus();
+  }else if(e.key==='Enter' && idx>=0){
+    buttons[idx].click();
+  }
+});
+
+})();
+</script>
+</body>
+</html>
