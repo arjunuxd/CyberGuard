@@ -113,7 +113,7 @@ a{color:var(--cyan);}
 .icon-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--panel-border);background:var(--panel-soft);display:flex;align-items:center;justify-content:center;color:var(--text-mid);transition:all .2s var(--ease);font-size:1rem;}
 .icon-btn:hover{color:var(--cyan);border-color:var(--panel-border-hi);transform:translateY(-1px);}
 
-.main-grid{flex:1;display:grid;grid-template-columns:1fr 300px;gap:0;min-height:0;position:relative;}
+.main-grid{flex:1;display:grid;grid-template-columns:1fr 300px;gap:0;min-height:0;height:0;position:relative;}
 .map-wrap{position:relative;display:flex;align-items:center;justify-content:center;padding:20px;min-height:0;overflow:hidden;}
 #map-stage{position:relative;width:min(78vh,720px);height:min(78vh,720px);max-width:100%;}
 #connections{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
@@ -155,7 +155,7 @@ a{color:var(--cyan);}
 .badge.unlocked{filter:none;border-color:rgba(255,181,71,0.4);box-shadow:0 0 16px rgba(255,181,71,0.25);animation:badge-pop .5s var(--ease);}
 @keyframes badge-pop{0%{transform:scale(.5) rotate(-12deg);}60%{transform:scale(1.15) rotate(4deg);}100%{transform:scale(1) rotate(0);}}
 
-.mobile-track{display:none;width:100%;max-width:100%;box-sizing:border-box;padding:18px 16px 100px;overflow-y:auto;overflow-x:hidden;}
+.mobile-track{display:none;width:100%;max-width:100%;height:100%;box-sizing:border-box;padding:18px 16px 100px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;}
 .mt-line{position:relative;width:100%;padding-left:34px;box-sizing:border-box;}
 .mt-line::before{content:'';position:absolute;left:11px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--cyan),rgba(94,196,255,0.05));}
 .mt-item{position:relative;width:100%;box-sizing:border-box;margin-bottom:14px;border:1px solid var(--panel-border);border-radius:var(--r-md);background:var(--panel);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s, transform .2s;}
@@ -178,7 +178,7 @@ a{color:var(--cyan);}
 .panel-title{font-family:var(--display);font-weight:700;font-size:1.3rem;letter-spacing:.02em;}
 .panel-close{width:34px;height:34px;border-radius:50%;border:1px solid var(--panel-border);background:var(--panel-soft);color:var(--text-mid);font-size:1.1rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s;}
 .panel-close:hover{color:var(--danger);border-color:rgba(255,77,106,0.4);}
-.panel-body{flex:1;overflow-y:auto;padding:24px 26px 40px;font-size:.92rem;line-height:1.65;color:var(--text-mid);}
+.panel-body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;padding:24px 26px 40px;font-size:.92rem;line-height:1.65;color:var(--text-mid);}
 .panel-body h4{font-family:var(--display);color:var(--text-hi);font-size:1rem;font-weight:700;margin:22px 0 10px;letter-spacing:.02em;}
 .panel-body h4:first-child{margin-top:0;}
 .panel-body p{margin-bottom:12px;}
@@ -327,35 +327,121 @@ a{color:var(--cyan);}
 .dl-progress-fill{height:100%;width:0%;border-radius:4px;background:linear-gradient(90deg,var(--amber),var(--danger));transition:width .15s linear;}
 .dl-status{font-family:var(--mono);font-size:.68rem;color:var(--text-low);margin-top:6px;}
 
-#hack-takeover{position:fixed;inset:0;z-index:9000;background:rgba(2,3,6,0.92);display:none;align-items:center;justify-content:center;padding:20px;}
-#hack-takeover.show{display:flex;}
+/* pre-shock micro-glitch flickers, shown briefly right before the full takeover */
+#pre-glitch{position:fixed;inset:0;z-index:8999;background:#000;opacity:0;pointer-events:none;display:none;}
+#pre-glitch.show{display:block;}
+#pre-glitch.flicker{animation:pre-glitch-flicker .12s steps(1) both;}
+@keyframes pre-glitch-flicker{
+  0%{opacity:.85;}
+  20%{opacity:0;}
+  35%{opacity:.6;}
+  55%{opacity:0;}
+  70%{opacity:.92;}
+  100%{opacity:0;}
+}
+
+#hack-takeover{position:fixed;inset:0;z-index:9000;background:radial-gradient(ellipse at center, rgba(20,2,6,0.88) 0%, rgba(2,0,1,0.98) 75%);display:none;align-items:center;justify-content:center;padding:20px;}
+#hack-takeover.show{display:flex;animation:takeover-bg-pulse 2.4s ease-in-out infinite;}
+@keyframes takeover-bg-pulse{
+  0%,100%{background:radial-gradient(ellipse at center, rgba(20,2,6,0.88) 0%, rgba(2,0,1,0.98) 75%);}
+  50%{background:radial-gradient(ellipse at center, rgba(40,3,9,0.92) 0%, rgba(2,0,1,0.98) 75%);}
+}
 .hack-flash{position:fixed;inset:0;background:rgba(255,77,106,0.18);pointer-events:none;opacity:0;z-index:9001;}
 .hack-flash.flash{animation:hack-flash-anim .35s ease-out;}
 @keyframes hack-flash-anim{0%{opacity:1;}100%{opacity:0;}}
-.hack-popup{width:min(420px,90vw);border:1px solid rgba(255,77,106,0.5);border-radius:var(--r-md);background:linear-gradient(160deg, rgba(35,8,14,0.95), rgba(10,5,10,0.97));padding:26px 24px;text-align:center;box-shadow:0 0 60px rgba(255,77,106,0.25);animation:hack-popup-shake .4s var(--ease);}
-@keyframes hack-popup-shake{0%{transform:scale(.9) translateX(0);opacity:0;}30%{transform:scale(1.02) translateX(-6px);opacity:1;}50%{transform:translateX(5px);}70%{transform:translateX(-3px);}100%{transform:translateX(0);}}
-.hack-popup .hp-icon{font-size:2.4rem;}
-.hack-popup .hp-title{font-family:var(--display);font-weight:700;font-size:1.3rem;color:#ffd2da;margin:8px 0 6px;letter-spacing:.03em;}
-.hack-popup .hp-sub{font-size:.84rem;color:var(--text-mid);margin-bottom:18px;}
+.hack-flash.flash-hard{animation:hack-flash-hard .55s ease-out;}
+@keyframes hack-flash-hard{
+  0%{opacity:1;background:rgba(255,40,60,0.55);}
+  15%{opacity:.2;}
+  30%{opacity:.85;background:rgba(255,77,106,0.45);}
+  50%{opacity:.1;}
+  100%{opacity:0;}
+}
+
+.hack-popup{
+  width:min(440px,90vw);border:1px solid rgba(255,40,60,0.6);border-radius:var(--r-md);
+  background:linear-gradient(160deg, rgba(40,4,9,0.97), rgba(6,2,4,0.99));
+  padding:28px 26px;text-align:center;
+  box-shadow:0 0 0 1px rgba(255,40,60,0.15), 0 0 80px rgba(255,40,60,0.35), 0 30px 70px -20px rgba(0,0,0,0.9);
+  animation:hack-popup-shake .5s var(--ease), hack-popup-throb 1.6s ease-in-out .5s infinite;
+  position:relative;overflow:hidden;
+}
+.hack-popup::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 2px, transparent 4px);
+  mix-blend-mode:overlay;
+}
+@keyframes hack-popup-shake{0%{transform:scale(.85) translateX(0);opacity:0;}25%{transform:scale(1.04) translateX(-8px);opacity:1;}45%{transform:translateX(7px);}60%{transform:translateX(-5px);}75%{transform:translateX(3px);}100%{transform:translateX(0);}}
+@keyframes hack-popup-throb{0%,100%{box-shadow:0 0 0 1px rgba(255,40,60,0.15), 0 0 80px rgba(255,40,60,0.35), 0 30px 70px -20px rgba(0,0,0,0.9);}50%{box-shadow:0 0 0 1px rgba(255,40,60,0.3), 0 0 120px rgba(255,40,60,0.55), 0 30px 70px -20px rgba(0,0,0,0.9);}}
+.hack-popup .hp-live{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;color:#ff5468;
+  border:1px solid rgba(255,40,60,0.5);border-radius:30px;padding:4px 12px;
+  background:rgba(255,40,60,0.1);margin-bottom:14px;text-transform:uppercase;
+}
+.hack-popup .hp-live .hp-rec-dot{width:7px;height:7px;border-radius:50%;background:#ff3050;box-shadow:0 0 8px #ff3050;animation:rec-blink 1s steps(1) infinite;}
+@keyframes rec-blink{0%,49%{opacity:1;}50%,100%{opacity:.15;}}
+.hack-popup .hp-icon{font-size:2.6rem;display:block;filter:drop-shadow(0 0 14px rgba(255,40,60,0.6));animation:hp-icon-pulse 1.6s ease-in-out infinite;}
+@keyframes hp-icon-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+.hack-popup .hp-title{
+  font-family:var(--display);font-weight:700;font-size:1.4rem;color:#ffe2e7;margin:10px 0 6px;
+  letter-spacing:.04em;text-shadow:0 0 18px rgba(255,40,60,0.65);
+}
+.hack-popup .hp-sub{font-size:.85rem;color:#d9b8bf;margin-bottom:18px;line-height:1.55;}
+.hack-popup .hp-sub b{color:#ffd2da;}
 .hack-popup .btn-sim{width:100%;}
+
 #hack-term-wrap{position:fixed;inset:0;z-index:9002;display:none;align-items:center;justify-content:center;padding:18px;}
 #hack-term-wrap.show{display:flex;}
-#hack-term-wrap .term-window{width:min(620px,94vw);}
-#hack-term-wrap .term-body{min-height:280px;max-height:50vh;}
+#hack-term-wrap::before{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 25%, rgba(20,0,4,0.5) 85%, rgba(10,0,2,0.85) 100%);
+}
+#hack-term-wrap .term-window{
+  width:min(640px,94vw);border-color:rgba(255,60,80,0.45);
+  box-shadow:0 0 0 1px rgba(255,60,80,0.12), 0 0 70px rgba(255,40,60,0.28), 0 25px 60px -15px rgba(0,0,0,0.9);
+  animation:term-window-throb 2.2s ease-in-out infinite;
+}
+@keyframes term-window-throb{
+  0%,100%{box-shadow:0 0 0 1px rgba(255,60,80,0.12), 0 0 70px rgba(255,40,60,0.28), 0 25px 60px -15px rgba(0,0,0,0.9);}
+  50%{box-shadow:0 0 0 1px rgba(255,60,80,0.22), 0 0 100px rgba(255,40,60,0.42), 0 25px 60px -15px rgba(0,0,0,0.9);}
+}
+#hack-term-wrap .term-titlebar{background:linear-gradient(180deg, rgba(45,8,12,0.95), rgba(15,4,7,0.95));border-bottom-color:rgba(255,60,80,0.25);}
+#hack-term-wrap .term-body{min-height:280px;max-height:50vh;color:#ff9aac;}
+#hack-term-wrap .term-line.dim{color:#a16a73;}
+#hack-term-wrap .term-cursor{background:#ff5468;}
 .hack-term-hint{text-align:center;font-family:var(--mono);font-size:.68rem;color:var(--text-low);margin-top:10px;letter-spacing:.05em;}
 .hack-term-hint kbd{border:1px solid var(--panel-border);border-radius:4px;padding:1px 6px;color:var(--cyan);background:rgba(73,230,255,0.06);}
+
+/* corner "REC" indicator shown for the duration of the takeover, like something
+   is watching — purely cosmetic, no camera access is requested or possible */
+#hack-rec-indicator{
+  position:fixed;top:18px;right:18px;z-index:9003;display:none;
+  align-items:center;gap:7px;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;
+  color:#ff5468;background:rgba(10,2,4,0.7);border:1px solid rgba(255,60,80,0.4);
+  border-radius:30px;padding:6px 12px;text-transform:uppercase;
+  box-shadow:0 0 20px rgba(255,40,60,0.25);
+}
+#hack-rec-indicator.show{display:flex;}
+#hack-rec-indicator .rec-dot{width:8px;height:8px;border-radius:50%;background:#ff3050;box-shadow:0 0 8px #ff3050;animation:rec-blink 1s steps(1) infinite;}
+
 @keyframes vibrate-screen{0%{transform:translate(0,0);}10%{transform:translate(-1px,1px);}20%{transform:translate(1px,-1px);}30%{transform:translate(-2px,0px);}40%{transform:translate(2px,1px);}50%{transform:translate(-1px,-1px);}60%{transform:translate(1px,2px);}70%{transform:translate(-2px,-1px);}80%{transform:translate(2px,0px);}90%{transform:translate(-1px,1px);}100%{transform:translate(0,0);}}
-body.glitching #app{animation:vibrate-screen .25s linear infinite;}
-.fake-cursor{position:fixed;z-index:9050;width:22px;height:22px;pointer-events:none;display:none;}
+@keyframes vibrate-screen-intense{0%{transform:translate(0,0) scale(1);}10%{transform:translate(-3px,2px) scale(1.002);}20%{transform:translate(3px,-2px) scale(.998);}30%{transform:translate(-4px,1px) scale(1.003);}40%{transform:translate(4px,2px) scale(1);}50%{transform:translate(-2px,-3px) scale(1.002);}60%{transform:translate(2px,3px) scale(.998);}70%{transform:translate(-4px,-2px) scale(1);}80%{transform:translate(4px,1px) scale(1.003);}90%{transform:translate(-2px,2px) scale(1);}100%{transform:translate(0,0) scale(1);}}
+body.glitching #app{animation:vibrate-screen .25s linear infinite;filter:contrast(1.05) saturate(1.1);}
+body.glitching-intense #app{animation:vibrate-screen-intense .18s linear infinite;filter:contrast(1.15) saturate(1.25) hue-rotate(-4deg);}
+
+.fake-cursor{position:fixed;z-index:9050;width:22px;height:22px;pointer-events:none;display:none;transition:none;}
 .fake-cursor.show{display:block;}
-.fake-cursor svg{width:100%;height:100%;filter:drop-shadow(0 0 4px rgba(255,77,106,0.8));}
+.fake-cursor svg{width:100%;height:100%;filter:drop-shadow(0 0 6px rgba(255,40,60,0.9));}
+.fake-cursor.snap{transition:none;}
+
 .sim-progress-note{font-family:var(--mono);font-size:.7rem;color:var(--text-low);text-align:center;margin-top:8px;}
 
 @media (max-width:980px){
-  .main-grid{grid-template-columns:1fr;grid-template-rows:auto;}
+  .main-grid{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr);height:100%;}
   .map-wrap{display:none;}
   .tracker-panel{display:none;}
-  .mobile-track{display:block;grid-column:1 / -1;width:100%;max-width:100%;box-sizing:border-box;overflow:visible;}
+  .mobile-track{display:block;grid-column:1 / -1;grid-row:1;width:100%;max-width:100%;height:100%;min-height:0;box-sizing:border-box;overflow-y:auto;}
   #detail-panel{width:100%;}
   .status-bar{padding:12px 14px;gap:10px;}
   .progress-wrap{order:5;width:100%;min-width:0;}
@@ -367,7 +453,7 @@ body.glitching #app{animation:vibrate-screen .25s linear infinite;}
 }
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
-  body.glitching #app{animation:none;}
+  body.glitching #app, body.glitching-intense #app{animation:none;filter:none;}
 }
 </style>
 </head>
@@ -441,12 +527,15 @@ body.glitching #app{animation:vibrate-screen .25s linear infinite;}
   <div class="panel-body" id="panel-body"></div>
 </div>
 
+<div id="pre-glitch"></div>
 <div class="hack-flash" id="hack-flash"></div>
+<div id="hack-rec-indicator"><span class="rec-dot"></span>SIMULATION ACTIVE</div>
 <div id="hack-takeover">
   <div class="hack-popup">
+    <div class="hp-live"><span class="hp-rec-dot"></span>INTRUSION DETECTED</div>
     <div class="hp-icon">☠️</div>
     <div class="hp-title">SYSTEM COMPROMISED</div>
-    <div class="hp-sub">The "installer" was a dropper. It just opened a remote shell into this page. Watch what happens next — then press <b>Esc</b> or <b>Enter</b> any time to break the connection.</div>
+    <div class="hp-sub">The "installer" was a dropper. It just opened a remote shell into this page and is about to act on its own. <b>This is a simulation</b> — nothing on your real device is touched. Watch what happens next, then press <b>Esc</b> or <b>Enter</b> any time to break the connection.</div>
     <button class="btn-sim danger" id="hack-watch-btn">Continue ▸</button>
   </div>
 </div>
@@ -527,6 +616,38 @@ function sfxBadge(){ tone(880,.12,'sine',.07); tone(1100,.16,'sine',.06,.1); }
 function sfxKey(){ tone(1200+Math.random()*400,.025,'square',.025); }
 function sfxAlarm(){ tone(900,.12,'square',.06); tone(700,.12,'square',.05,.13); }
 function sfxGlitch(){ tone(80+Math.random()*60,.05,'sawtooth',.04); }
+/* A sustained, slightly detuned low drone — two close sawtooth frequencies beating
+   against each other read as "dread" rather than a clean alarm. Used to underscore
+   the ransomware takeover without resorting to a jump-scare blast. */
+function sfxDrone(dur){
+  if(!state.soundOn) return;
+  var ctx = ensureAudio();
+  if(!ctx) return;
+  var t0 = ctx.currentTime;
+  [55, 58.5].forEach(function(freq, i){
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(freq, t0);
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(0.045, t0+0.6);
+    gain.gain.linearRampToValueAtTime(0.045, t0+dur-0.6);
+    gain.gain.linearRampToValueAtTime(0.0001, t0+dur);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0+dur+0.05);
+  });
+}
+/* A single low thud, used as a "heartbeat" pulse during the takeover screen. */
+function sfxThud(){ tone(60,.18,'sine',.09); tone(48,.22,'sine',.05,.04); }
+/* A harsher, more dissonant version of the glitch tone for the encryption ramp-up. */
+function sfxGlitchHard(){ tone(60+Math.random()*120,.09,'sawtooth',.07); tone(30+Math.random()*40,.07,'square',.04,.02); }
+/* The "reveal" sting for when the ransom note appears — a falling dissonant stab. */
+function sfxSting(){
+  tone(140,.4,'sawtooth',.09);
+  tone(133,.4,'sawtooth',.07,.02);
+  tone(70,.5,'square',.06,.05);
+}
 
 var GLYPH_BITS = ['0x4F2A','1010','#root','SYN','ACK','ssh://','0xFF','>_','AES-256','ping','base64','TCP/443'];
 function hackClickFX(x,y){
@@ -1011,19 +1132,113 @@ builders['case-study'] = function(){
 
 /* ===== SIM LAB 09 — PASSWORD CRACKING DEMO ===== */
 var simCred = { account: null };
-var COMMON_PASSWORDS = ['123456','password','arjun123','qwerty','admin123','letmein','football','iloveyou','welcome1','password1','12345678','monkey123','dragon99','sunshine1'];
+
+/* A much wider net than a handful of exact strings: top breached/common passwords,
+   keyboard walks, and common words used as a base for "word+digits" patterns.
+   This list exists for two purposes: (1) instant dictionary hits on exact matches,
+   and (2) as a base-word set for the pattern detector below, so "Arjun2024",
+   "Sandeep@123", "Cricket99" etc. are recognized as the SAME class of weak password
+   a real cracking tool would catch in its first pass — not just literal matches. */
+var COMMON_PASSWORDS = [
+  '123456','123456789','12345678','12345','1234567','password','password1','password123',
+  'qwerty','qwertyuiop','qwerty123','asdfgh','asdfghjkl','zxcvbnm','letmein','welcome',
+  'welcome1','admin','admin123','iloveyou','monkey','dragon','football','baseball',
+  'basketball','cricket','sunshine','princess','superman','batman','master','shadow',
+  'michael','jennifer','jordan','hunter','trustno1','login','starwars','whatever',
+  'freedom','ninja','mustang','access','flower','hottie','loveme','passw0rd','p@ssword',
+  'p@ssw0rd','abc123','abcd1234','111111','000000','123123','aaaaaa','1q2w3e4r',
+  'qazwsx','q1w2e3r4','iloveyou1','letmein1','google','facebook','instagram','snapchat'
+];
+
+/* common first names — used the same way: as a base word for pattern detection,
+   so "rahul123", "Arjun2024", "priya@99" etc. are caught even though the exact
+   string was never typed by anyone before. */
+var COMMON_NAMES = [
+  'arjun','rahul','priya','aisha','rohan','sneha','vikram','anjali','karthik','meera',
+  'arun','divya','ravi','pooja','suresh','kavya','ajay','neha','vijay','shreya',
+  'amit','riya','sandeep','nisha','manoj','swati','deepak','komal','rajesh','sonia',
+  'john','james','michael','david','sarah','emma','olivia','noah','liam','ava'
+];
+
+/* keyboard-walk fragments — typing adjacent keys in a row is a top password habit
+   and crackers test these before anything else. */
+var KEYBOARD_WALKS = ['qwerty','asdf','zxcv','qazwsx','1qaz','qwertyuiop','asdfghjkl','zxcvbnm','123qwe','qwe123'];
+
+/* Builds the set of "leetspeak"-normalized variants of a string so substitutions
+   like @ -> a, 0 -> o, 3 -> e, 1 -> i/l, $ -> s are still recognized as the
+   underlying dictionary word. This mirrors what real wordlist-based crackers
+   (e.g. rule-based attacks in tools like Hashcat/John the Ripper) actually do. */
+function leetNormalize(s){
+  return s.toLowerCase()
+    .replace(/[@4]/g,'a').replace(/[3]/g,'e').replace(/[1!|]/g,'i')
+    .replace(/[0]/g,'o').replace(/[5\$]/g,'s').replace(/[7]/g,'t')
+    .replace(/[8]/g,'b');
+}
+
+/* Strips trailing digits/symbols off a password to test whether the "base" is a
+   known dictionary word or name, e.g. "Arjun2024!" -> base "arjun". This is the
+   single most common password pattern humans use, and the #1 thing real cracking
+   tools try right after the raw dictionary list. */
+function stripTrailingNoise(s){
+  return s.replace(/[\d\W_]+$/,'');
+}
+
+/* Returns a short classification describing WHY a password is weak, or null if
+   nothing obvious is found. Used both for the strength meter explanation and to
+   decide what the cracking terminal "finds". */
+function classifyWeakness(pw){
+  if(!pw) return null;
+  var lower = pw.toLowerCase();
+  var leet = leetNormalize(pw);
+  var base = stripTrailingNoise(lower);
+  var leetBase = stripTrailingNoise(leet);
+
+  if(COMMON_PASSWORDS.indexOf(lower) !== -1 || COMMON_PASSWORDS.indexOf(leet) !== -1){
+    return {type:'exact', label:'an exact match in the top breached-password list'};
+  }
+  if(/^(.)\1+$/.test(pw)){
+    return {type:'repeat', label:'a single character repeated'};
+  }
+  if(/^(?:0123|1234|2345|3456|4567|5678|6789|9876|8765|7654|6543|5432|4321|3210)+\d*$/.test(pw)){
+    return {type:'sequence', label:'a simple numeric sequence'};
+  }
+  for(var i=0;i<KEYBOARD_WALKS.length;i++){
+    if(lower.indexOf(KEYBOARD_WALKS[i]) !== -1){
+      return {type:'keyboard', label:'a keyboard-walk pattern ("'+KEYBOARD_WALKS[i]+'")'};
+    }
+  }
+  if(base.length >= 3 && (COMMON_PASSWORDS.indexOf(base) !== -1 || COMMON_PASSWORDS.indexOf(leetBase) !== -1)){
+    return {type:'word+digits', label:'a common password with digits or symbols tacked on the end'};
+  }
+  if(base.length >= 3 && (COMMON_NAMES.indexOf(base) !== -1 || COMMON_NAMES.indexOf(leetBase) !== -1)){
+    return {type:'name+digits', label:'a common first name with digits or symbols tacked on the end'};
+  }
+  if(/^[a-zA-Z]+[0-9]{1,4}[\W_]?$/.test(pw) && pw.length <= 12){
+    return {type:'word+digits', label:'a short word followed by a few predictable digits'};
+  }
+  return null;
+}
 
 function pwStrengthScore(pw){
   if(!pw) return 0;
   var score = 0;
-  if(pw.length >= 8) score += 25;
+  if(pw.length >= 8) score += 20;
   if(pw.length >= 12) score += 15;
-  if(/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score += 20;
-  if(/[0-9]/.test(pw)) score += 15;
-  if(/[^A-Za-z0-9]/.test(pw)) score += 25;
-  var lower = pw.toLowerCase();
-  if(COMMON_PASSWORDS.indexOf(lower) !== -1) score = Math.min(score, 8);
-  if(/^[a-zA-Z]+[0-9]{1,3}$/.test(pw)) score = Math.min(score, 25);
+  if(pw.length >= 16) score += 10;
+  if(/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score += 15;
+  if(/[0-9]/.test(pw)) score += 10;
+  if(/[^A-Za-z0-9]/.test(pw)) score += 20;
+
+  var weakness = classifyWeakness(pw);
+  if(weakness){
+    /* Cap the score hard regardless of length/symbols — a recognizable pattern
+       is crackable almost instantly no matter how it's dressed up. */
+    if(weakness.type === 'exact' || weakness.type === 'repeat' || weakness.type === 'sequence'){
+      score = Math.min(score, 5);
+    } else {
+      score = Math.min(score, 28);
+    }
+  }
   return Math.max(0, Math.min(100, score));
 }
 function pwStrengthLabel(score){
@@ -1041,7 +1256,7 @@ builders['sim-cred'] = function(){
 function renderSimCredForm(){
   return ''+
     '<h4>Live Demo: How A Weak Password Falls</h4>'+
-    '<p>This is a fully simulated, self-contained lab — nothing here touches a real network or a real account. Create a practice login below, then hit <b>Hack It</b> to watch an automated cracking attempt run against it in a terminal.</p>'+
+    '<p>This is a fully simulated, self-contained lab — nothing here touches a real network or a real account. Create a practice login with <b>any</b> username and password you like, then hit <b>Hack It</b> to watch an automated cracking attempt run against it in a terminal. The outcome is computed live from the password you actually typed — not a fixed example — so try your own, then try one a friend invents.</p>'+
     '<div class="sim-stage" id="sim-cred-stage">'+
       '<div class="sim-step-label"><span class="pip"></span>STEP 1 — CREATE A TEST ACCOUNT</div>'+
       '<div class="fake-form">'+
@@ -1118,7 +1333,7 @@ function launchCredTerminal(account){
   var body = document.getElementById('sc-term-body');
   termPrintLines(body, [
     {t:'CrackLab Auditor v2.1 — local simulation, no real network access', cls:'dim'},
-    {t:'Loaded ruleset: common-passwords.txt (14 entries) + brute-force fallback', cls:'dim'},
+    {t:'Loaded ruleset: common-passwords.txt + common-names.txt + leetspeak/suffix rules + brute-force fallback', cls:'dim'},
     {t:'', cls:'dim'},
     {t:'Enter the target username to begin:', cls:'hl'}
   ], 80, function(){
@@ -1142,30 +1357,74 @@ function runCrackSequence(body, account, typedUsername){
   var matchesAccount = typedUsername.toLowerCase() === account.username.toLowerCase();
   var pw = account.password;
   var lowerPw = pw.toLowerCase();
-  var isWeak = COMMON_PASSWORDS.indexOf(lowerPw) !== -1 || pwStrengthScore(pw) < 50;
+  var weakness = classifyWeakness(pw);
+  var score = pwStrengthScore(pw);
+  /* The verdict always comes from the SAME score the live strength meter showed —
+     so the terminal can never contradict what the student already saw on screen.
+     Crack anything that isn't genuinely "Strong": Very Weak, Weak, and Moderate
+     all get cracked. Only Strong (score >= 75) survives. */
+  var willCrack = score < 75;
 
   var lines = [
     {t:'', cls:'dim'},
     {t:'[*] Resolving account "'+typedUsername+'"...', cls:'dim'},
     {t: matchesAccount ? '[+] Account found in local sandbox DB.' : '[!] No matching sandbox account — generating a generic locked profile for demo.', cls: matchesAccount ? 'good':'warn'},
-    {t:'[*] Starting dictionary attack using common-passwords.txt...', cls:'dim'}
+    {t:'[*] Starting dictionary + pattern attack (common-passwords.txt, '+(COMMON_PASSWORDS.length+COMMON_NAMES.length)+' base terms, leetspeak + suffix rules)...', cls:'dim'}
   ];
 
-  var dictIndex = COMMON_PASSWORDS.indexOf(lowerPw);
-  var dictTries = isWeak && dictIndex !== -1 ? COMMON_PASSWORDS.slice(0, dictIndex+1) : COMMON_PASSWORDS.slice(0, 9);
-  dictTries.forEach(function(cand){
-    lines.push({t:'    trying "'+cand+'" ... '+(cand===lowerPw ? 'MATCH' : 'fail'), cls: cand===lowerPw ? 'good':'dim'});
+  /* Build a short list of plausible attempts to print before the result. If we
+     have a real classification, lead with attempts that are actually related to
+     the password (so it reads as a genuine attack, not random noise); otherwise
+     just sample a handful of dictionary entries to show the engine working. */
+  var sampleTries = [];
+  if(weakness){
+    if(weakness.type === 'exact'){
+      sampleTries = COMMON_PASSWORDS.slice(0, 4);
+      if(sampleTries.indexOf(lowerPw) === -1) sampleTries.push(lowerPw);
+    } else if(weakness.type === 'word+digits' || weakness.type === 'name+digits'){
+      var base = stripTrailingNoise(leetNormalize(pw));
+      sampleTries = [base, base+'1', base+'123', base+'2023', base+'2024'];
+    } else if(weakness.type === 'keyboard'){
+      sampleTries = KEYBOARD_WALKS.slice(0, 4);
+    } else if(weakness.type === 'sequence' || weakness.type === 'repeat'){
+      sampleTries = ['123456','111111','000000','abcdef'];
+    }
+  } else {
+    sampleTries = COMMON_PASSWORDS.slice(0, 4);
+  }
+  sampleTries.slice(0,5).forEach(function(cand){
+    var isHit = willCrack && cand.toLowerCase() === lowerPw;
+    lines.push({t:'    trying "'+cand+'" ... '+(isHit ? 'MATCH' : 'fail'), cls: isHit ? 'good':'dim'});
   });
 
-  if(isWeak && dictIndex !== -1){
+  var alreadyMatched = sampleTries.slice(0,5).some(function(c){ return c.toLowerCase()===lowerPw; });
+
+  if(willCrack && weakness){
+    if(!alreadyMatched){
+      lines.push({t:'    trying "'+pw+'" (pattern-derived candidate) ... MATCH', cls:'good'});
+    }
     lines.push({t:'', cls:'dim'});
-    lines.push({t:'[+] Dictionary match found after '+dictTries.length+' attempts.', cls:'good'});
+    lines.push({t:'[+] Match found — password follows a known weak pattern:', cls:'good'});
+    lines.push({t:'    '+weakness.label, cls:'good'});
+    lines.push({t:'[+] PASSWORD FOUND: "'+pw+'"', cls:'good'});
+    lines.push({t:'[+] ACCESS GRANTED — session token issued (simulated).', cls:'good'});
+  } else if(willCrack){
+    /* Moderate-strength passwords with no obvious dictionary/name/keyboard pattern
+       still fall here on a GPU cluster within a realistic time budget — the keyspace
+       just isn't large enough yet. This is the "moderate" verdict: no naive pattern,
+       but not enough length/entropy to resist a sustained targeted attack either. */
+    lines.push({t:'[*] No dictionary or pattern match. Escalating to brute-force (length '+pw.length+', mixed charset)...', cls:'dim'});
+    lines.push({t:'    keyspace estimate: ~'+bruteForceEstimate(pw)+' combinations', cls:'dim'});
+    lines.push({t:'    attempting common masks + rule-based mutations...', cls:'dim'});
+    lines.push({t:'    [████████████████████] running on simulated GPU cluster (8x RTX-class)...', cls:'warn'});
+    lines.push({t:'', cls:'dim'});
+    lines.push({t:'[+] Keyspace small enough to exhaust within a realistic attack window.', cls:'good'});
     lines.push({t:'[+] PASSWORD FOUND: "'+pw+'"', cls:'good'});
     lines.push({t:'[+] ACCESS GRANTED — session token issued (simulated).', cls:'good'});
   } else {
-    lines.push({t:'[*] No dictionary match. Escalating to brute-force (length '+pw.length+', mixed charset)...', cls:'dim'});
+    lines.push({t:'[*] No dictionary or pattern match. Escalating to brute-force (length '+pw.length+', mixed charset)...', cls:'dim'});
     lines.push({t:'    keyspace estimate: ~'+bruteForceEstimate(pw)+' combinations', cls:'dim'});
-    lines.push({t:'    attempting common patterns + masks...', cls:'dim'});
+    lines.push({t:'    attempting common masks + rule-based mutations...', cls:'dim'});
     lines.push({t:'    [████████████████████] timeout reached, no match', cls:'warn'});
     lines.push({t:'', cls:'dim'});
     lines.push({t:'[x] BRUTE-FORCE FAILED — password not cracked within sandbox limits.', cls:'bad'});
@@ -1173,7 +1432,7 @@ function runCrackSequence(body, account, typedUsername){
   }
 
   termPrintLines(body, lines, 130, function(){
-    showCredResult(isWeak && dictIndex !== -1, account, pw);
+    showCredResult(willCrack, account, pw, weakness);
   });
 }
 
@@ -1192,22 +1451,23 @@ function bruteForceEstimate(pw){
   return Math.round(combos).toLocaleString();
 }
 
-function showCredResult(cracked, account, pw){
+function showCredResult(cracked, account, pw, weakness){
   account.wasCracked = cracked;
   var banner = document.getElementById('sc-result-banner');
   if(!banner) return;
   banner.classList.add('show', cracked ? 'cracked' : 'safe');
   if(cracked){
     sfxBad();
+    var reason = weakness ? weakness.label : 'a short length or limited character mix that brute-force could brute through quickly';
     banner.innerHTML =
-      '⚠ <b>PASSWORD CRACKED.</b> "'+escHtml(pw)+'" was found in seconds because it combined a dictionary word with a short, predictable number.'+
-      '<div class="sim-explain">This is exactly what happens to real accounts using passwords like <b>name + birth year</b> or <b>name123</b>. Automated tools test thousands of these per second — a human never needs to guess.</div>'+
+      '⚠ <b>PASSWORD CRACKED.</b> "'+escHtml(pw)+'" was found because it is '+reason+'.'+
+      '<div class="sim-explain">This is exactly what happens to real accounts using passwords built from a word or name plus a few digits. Automated tools test millions of these variations per second — a human attacker never has to guess by hand.</div>'+
       '<div style="margin-top:12px;"><button class="btn-sim ghost" id="sc-retry-btn">↺ Try a stronger password instead</button></div>';
   } else {
     sfxGood();
     banner.innerHTML =
-      '✅ <b>PASSWORD HELD.</b> The dictionary attack found no match, and brute-force ran out of practical time against this length and character mix.'+
-      '<div class="sim-explain">Longer passwords with a real character mix grow the search space exponentially — that\'s why length plus randomness beats clever substitutions like "P@ssw0rd".</div>'+
+      '✅ <b>PASSWORD HELD.</b> No dictionary or pattern match was found, and brute-force ran out of practical time against this length and character mix.'+
+      '<div class="sim-explain">Longer passwords with a real character mix grow the search space exponentially — that\'s why length plus genuine randomness beats predictable substitutions like "P@ssw0rd" or "Name@2024".</div>'+
       '<div style="margin-top:12px;"><button class="btn-sim ghost" id="sc-retry-btn">↺ Test another password</button></div>';
   }
   var retryBtn = document.getElementById('sc-retry-btn');
@@ -1326,23 +1586,47 @@ function runFakeDownload(){
   }, 180);
 }
 
+var hackDroneTimer = null;
+var hackHeartbeatTimer = null;
+
 function runFakeInstall(){
   var btn = document.querySelector('#sim-ransom-stage .btn-sim');
   if(btn){ btn.disabled = true; btn.textContent = 'Installing…'; }
   var status = document.getElementById('dl-status');
   if(status) status.textContent = '187 MB · running installer...';
-  setTimeout(function(){
-    markVisited('sim-ransom');
-    triggerHackTakeover();
-  }, 900);
+
+  /* A handful of quick screen-static flickers right before the big reveal —
+     builds dread instead of just cutting hard into the popup. */
+  var preGlitch = document.getElementById('pre-glitch');
+  preGlitch.classList.add('show');
+  var flickerCount = 0;
+  function flickerOnce(){
+    flickerCount++;
+    preGlitch.classList.remove('flicker');
+    void preGlitch.offsetWidth; /* restart animation */
+    preGlitch.classList.add('flicker');
+    sfxGlitchHard();
+    if(flickerCount < 4){
+      setTimeout(flickerOnce, 160 + Math.random()*180);
+    } else {
+      setTimeout(function(){
+        preGlitch.classList.remove('show','flicker');
+        markVisited('sim-ransom');
+        triggerHackTakeover();
+      }, 220);
+    }
+  }
+  setTimeout(flickerOnce, 500);
 }
 
 function triggerHackTakeover(){
   document.getElementById('hack-takeover').classList.add('show');
+  document.getElementById('hack-rec-indicator').classList.add('show');
   var flash = document.getElementById('hack-flash');
-  flash.classList.add('flash');
-  setTimeout(function(){ flash.classList.remove('flash'); }, 400);
+  flash.classList.add('flash-hard');
+  setTimeout(function(){ flash.classList.remove('flash-hard'); }, 600);
   sfxAlarm();
+  sfxDrone(3.2);
 }
 
 document.getElementById('hack-watch-btn').addEventListener('click', function(){
@@ -1360,6 +1644,13 @@ function startHackTerminalSequence(){
   cursor.classList.add('show');
   animateFakeCursor();
 
+  /* Looping low drone for the duration of the takeover — re-triggers itself
+     every ~3s. Cleared in endHackSequence. */
+  sfxDrone(3.4);
+  hackDroneTimer = setInterval(function(){ sfxDrone(3.4); }, 3000);
+  /* A slow "heartbeat" thud underneath everything else. */
+  hackHeartbeatTimer = setInterval(function(){ sfxThud(); }, 1100);
+
   var body = document.getElementById('hack-term-body');
   body.innerHTML = '';
 
@@ -1370,14 +1661,23 @@ function startHackTerminalSequence(){
     {t:'', cls:'dim'},
     {t:'> whoami', cls:'prompt'},
     {t:'  SYSTEM\\you', cls:'dim'},
+    {t:'> enumerating connected devices...', cls:'dim'},
+    {t:'  found: webcam, microphone, 2x storage volume', cls:'warn'},
+    {t:'> requesting webcam handle... denied (simulation sandbox)', cls:'dim'},
     {t:'> scanning local drives for documents, photos, .docx, .xlsx, .pdf...', cls:'dim'},
     {t:'  found 1,482 files', cls:'dim'},
     {t:'> disabling Windows Defender real-time protection... done', cls:'bad'},
     {t:'> disabling System Restore... done', cls:'bad'},
-    {t:'> beginning encryption pass (AES-256) on user files...', cls:'bad'},
-    {t:'  [▓▓▓▓▓▓▓▓░░░░░░░░░░░░] 41% encrypted', cls:'bad'},
-    {t:'  [▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░] 68% encrypted', cls:'bad'},
-    {t:'  [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100% encrypted', cls:'bad'},
+    {t:'> terminating backup agent process... done', cls:'bad'},
+    {t:'', cls:'dim'},
+    {t:'> beginning encryption pass (AES-256) on user files...', cls:'bad', escalate:true},
+    {t:'  [▓▓▓░░░░░░░░░░░░░░░░░] 14% encrypted — 207 files lost', cls:'bad', escalate:true},
+    {t:'  [▓▓▓▓▓▓▓░░░░░░░░░░░░░] 33% encrypted — 489 files lost', cls:'bad', escalate:true},
+    {t:'  [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░] 54% encrypted — 800 files lost', cls:'bad', escalate:true},
+    {t:'  [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░] 74% encrypted — 1,097 files lost', cls:'bad', escalate:true},
+    {t:'  [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░] 92% encrypted — 1,364 files lost', cls:'bad', escalate:true},
+    {t:'  [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100% encrypted — 1,482 files lost', cls:'bad', escalate:true, sting:true},
+    {t:'', cls:'dim'},
     {t:'> dropping ransom note README_RECOVER_FILES.txt on Desktop', cls:'warn'},
     {t:'> exfiltrating 1,482 files to remote server before demanding payment...', cls:'bad'},
     {t:'', cls:'dim'},
@@ -1411,8 +1711,26 @@ function hackTermPrint(body, lines, idx){
     div.textContent = ln.t;
     body.appendChild(div);
     body.scrollTop = body.scrollHeight;
-    if(ln.t && ln.t.trim()){ sfxGlitch(); }
-    hackTermTimer = setTimeout(function(){ step(i+1); }, ln.t.indexOf('▓')!==-1 ? 230 : 170);
+
+    /* Once the encryption pass starts (the "escalate" flagged lines), ramp the
+       whole screen into the more intense glitch mode and use the harsher SFX —
+       the visual and audio intensity climbs together with the encryption %. */
+    if(ln.escalate){
+      document.body.classList.add('glitching-intense');
+      sfxGlitchHard();
+    } else if(ln.t && ln.t.trim()){
+      sfxGlitch();
+    }
+    if(ln.sting){
+      sfxSting();
+      var flash = document.getElementById('hack-flash');
+      flash.classList.add('flash-hard');
+      setTimeout(function(){ flash.classList.remove('flash-hard'); }, 600);
+      /* Settle back to the lighter glitch once the worst of it has landed. */
+      setTimeout(function(){ document.body.classList.remove('glitching-intense'); }, 700);
+    }
+
+    hackTermTimer = setTimeout(function(){ step(i+1); }, ln.t.indexOf('▓')!==-1 ? 260 : 170);
   }
   step(idx);
 }
@@ -1422,17 +1740,27 @@ function animateFakeCursor(){
   if(!cursor.classList.contains('show')) return;
   var x = Math.random()*window.innerWidth;
   var y = Math.random()*window.innerHeight*0.6 + window.innerHeight*0.1;
+  /* Occasionally snap instantly instead of gliding, and briefly "freeze" — reads
+     as something else has taken control of the pointer rather than a smooth,
+     friendly animation. */
+  var snaps = Math.random() < 0.35;
+  cursor.classList.toggle('snap', snaps);
   cursor.style.left = x+'px';
   cursor.style.top = y+'px';
+  var freezePause = Math.random() < 0.18 ? 420 : 0;
   setTimeout(function(){
     if(cursor.classList.contains('show')) animateFakeCursor();
-  }, 180 + Math.random()*220);
+  }, freezePause + 140 + Math.random()*240);
 }
 
 function endHackSequence(){
   if(hackTermTimer){ clearTimeout(hackTermTimer); hackTermTimer = null; }
+  if(hackDroneTimer){ clearInterval(hackDroneTimer); hackDroneTimer = null; }
+  if(hackHeartbeatTimer){ clearInterval(hackHeartbeatTimer); hackHeartbeatTimer = null; }
   document.getElementById('hack-term-wrap').classList.remove('show');
+  document.getElementById('hack-rec-indicator').classList.remove('show');
   document.body.classList.remove('glitching');
+  document.body.classList.remove('glitching-intense');
   document.getElementById('fake-cursor').classList.remove('show');
   sfxClose();
   if(state.currentPanel === 'sim-ransom'){
@@ -1449,6 +1777,7 @@ document.addEventListener('keydown', function(e){
     endHackSequence();
   } else if(e.key==='Escape' && popupVisible){
     document.getElementById('hack-takeover').classList.remove('show');
+    document.getElementById('hack-rec-indicator').classList.remove('show');
   }
 });
 
